@@ -9,10 +9,10 @@ variables:
 build-for-windows:
   stage: build
   image: node:22.8.0
-  before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" > .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
-    - npm config set @fklab:registry https://git01.klaffenboeck.eu/api/v4/packages/npm/
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" > .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+#    - npm config set @fklab:registry https://git01.klaffenboeck.eu/api/v4/packages/npm/
   script:
     - npm install -g node-gyp
     #    - npm install --save-dev windows-build-tools
