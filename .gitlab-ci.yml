@@ -61,8 +61,8 @@ publish-to-gitlab-registry:
     - npm install
     - npm run build
     - npm publish
-  only:
-    - tags  # Only run on tagged commits (release versions)
+#  only:
+#    - tags  # Only run on tagged commits (release versions)
   dependencies:
     - build-for-windows
 #    - build-for-ubuntu
