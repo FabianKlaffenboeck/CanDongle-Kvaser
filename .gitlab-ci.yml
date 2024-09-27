@@ -1,0 +1,63 @@
+stages:
+  - build
+  - publish
+
+variables:
+  TARGET_ARCH: "x64"  # Adjust if needed (e.g., ia32)
+  PACKAGE_NAME: "candongle-kvaser"  # Replace with your actual package name
+
+build-for-windows:
+  stage: build
+  image: node:22.8.0
+  script:
+    - npm install -g node-gyp
+    #    - npm install --save-dev windows-build-tools
+    - npm install --save node-addon-api
+    - node-gyp configure --arch=$TARGET_ARCH --target_platform=win32
+    - node-gyp build
+  artifacts:
+    paths:
+      - build/  # Save the build artifacts
+
+#build-for-ubuntu:
+#  stage: build
+#  image: node:$NODE_VERSION
+#  script:
+#    - apt-get update && apt-get install -y python3 make g++  # Install dependencies
+#    - npm install -g node-gyp
+#    - npm install
+#    - node-gyp configure --arch=$TARGET_ARCH --target_platform=linux
+#    - node-gyp build
+#  artifacts:
+#    paths:
+#      - build/  # Save the build artifacts
+#
+#build-for-macos:
+#  stage: build
+#  tags:
+#    - macos
+#  script:
+#    - brew install python
+#    - npm install -g node-gyp
+#    - npm install
+#    - node-gyp configure --arch=$TARGET_ARCH --target_platform=darwin
+#    - node-gyp build
+#  artifacts:
+#    paths:
+#      - build/  # Save the build artifacts
+
+publish-to-gitlab-registry:
+  stage: publish
+  image: node:22.8.0
+  script:
+    - npm install
+    - npm run build
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - npm publish
+  only:
+    - tags  # Only run on tagged commits (release versions)
+  dependencies:
+    - build-for-windows
+#    - build-for-ubuntu
+#    - build-for-macos
