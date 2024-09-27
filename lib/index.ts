@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import {WindowsCanKvaser, WindowsCanKvaserInterface} from "./win32";
+import debug from "debug";
 
 
 // export * from './darwin'

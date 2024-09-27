@@ -1,4 +1,4 @@
-import {AdapterInfo, CanDevicesInterface, CanInterface, CanMessage, OpenOptions} from "./CanInterfaces";
+import {AdapterInfo, CanDevicesInterface, CanInterface, CanMessage, OpenOptions} from "@fklab/candongle-interface";
 
 const kvaserCan = require('../build/Release/kvaser_can.node');
 
@@ -30,7 +30,7 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
 export class WindowsCanDeviceKvaser implements CanInterface {
     private channel: any;
     public isOpen: boolean = false;
-    private messageCallback: (id: number, data: Buffer, length: number) => void; // Store the callback
+    private messageCallback: (id: number, data: number[], length: number) => void; // Store the callback
 
     constructor(private path: string, private baudRate: number) {
     }
@@ -62,16 +62,17 @@ export class WindowsCanDeviceKvaser implements CanInterface {
             this.channel.setMessageCallback((msg: CanMessage) => {
                 const canMessage: CanMessage = {
                     id: msg.id,
-                    data: Buffer.from(msg.data),
+                    data: msg.data,
                     time: msg.time,
                 };
+
                 resolve(canMessage);
             });
         });
     }
 
     // Write a CAN message to the channel
-    async write(buffer: Buffer): Promise<void> {
+    async write(buffer: number[]): Promise<void> {
         if (!this.isOpen) {
             throw new Error('CAN channel is not open');
         }
@@ -80,11 +81,11 @@ export class WindowsCanDeviceKvaser implements CanInterface {
     }
 
     // Register a callback to be triggered when a CAN message arrives
-    setMessageCallback(callback: (id: number, data: Buffer, length: number) => void): void {
+    setMessageCallback(callback: (id: number, data: number[], length: number) => void): void {
         this.messageCallback = callback; // Store the callback
 
         // Register the callback with the native module
-        kvaserCan.setMessageCallback((id: number, data: Buffer, length: number) => {
+        kvaserCan.setMessageCallback((id: number, data: number[], length: number) => {
             if (this.messageCallback) {
                 this.messageCallback(id, data, length); // Call the stored callback
             }
