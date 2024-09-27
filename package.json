@@ -21,7 +21,6 @@
     "hardware"
   ],
   "dependencies": {
-    "@fklab/candongle-interface": "1.0.0",
     "debug": "4.3.4",
     "node-addon-api": "7.0.0",
     "node-gyp-build": "^4.6.0"
