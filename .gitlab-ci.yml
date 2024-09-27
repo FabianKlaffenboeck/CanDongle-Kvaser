@@ -10,8 +10,11 @@ build-for-windows:
   stage: build
   image: node:22.8.0
   before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - npm config set -- //${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}
+    - npm config set @fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/
+#    - npm config set @scope:registry https://your_domain_name.com/api/v4/packages/npm/
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
   script:
     - npm install
     - node-gyp configure --arch=$TARGET_ARCH --target_platform=win32
