@@ -9,6 +9,9 @@ variables:
 build-for-windows:
   stage: build
   image: node:22.8.0
+  before_script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
   script:
     - npm install -g node-gyp
     #    - npm install --save-dev windows-build-tools
@@ -49,11 +52,12 @@ build-for-windows:
 publish-to-gitlab-registry:
   stage: publish
   image: node:22.8.0
+  before_script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
   script:
     - npm install
     - npm run build
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
     - npm publish
   only:
     - tags  # Only run on tagged commits (release versions)
