@@ -21,7 +21,7 @@
   ],
   "dependencies": {
     "@fklab/candongle-interface": "0.0.1",
-    "debug": "4.3.4",
+    "debug": "4.3.5",
     "node-addon-api": "7.0.0",
     "node-gyp-build": "^4.6.0"
   },

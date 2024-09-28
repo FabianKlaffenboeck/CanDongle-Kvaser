@@ -14,7 +14,7 @@ build-for-windows:
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
     - npm install -g node-gyp
-    #    - npm install --save-dev windows-build-tools
+    - npm install
     - npm install --save node-addon-api
     - node-gyp configure --arch=$TARGET_ARCH --target_platform=win32
     - node-gyp build
@@ -60,8 +60,8 @@ publish-to-gitlab-registry:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
     - npm publish
-  only:
-    - tags
+  #  only:
+  #    - tags
   dependencies:
     - build-for-windows
 #    - build-for-ubuntu
