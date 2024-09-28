@@ -1,7 +1,7 @@
 #ifndef CANHANDLER_H
 #define CANHANDLER_H
 
-#include "canlib.h"
+#include "../Canlib/INC/canlib.h"
 #include <iostream>
 #include <stdexcept>
 #include <vector>
