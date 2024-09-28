@@ -8,21 +8,11 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
 
     // List available CAN devices (for simplicity, mock device info)
     async list(): Promise<AdapterInfo[]> {
-        const devices: AdapterInfo[] = []
+        const devices = await kvaserCan.listChannels();
 
-        for (let i = 0; i < 10; i++) {
-            devices.push({name: "test " + i})
-        }
-
-
-        return devices;
-
-
-        // const devices = await kvaserCan.listChannels();
-        //
-        // return devices.map((device: any) => ({
-        //     path: device
-        // }))
+        return devices.map((device: any) => ({
+            path: device
+        }))
     },
 
     // Open a specific CAN device by its path and baud rate
