@@ -20,7 +20,7 @@
               "<(module_root_dir)/Canlib/Lib/MS/canlib32.lib"
           ],
           'sources': [
-            'src/kvaser_can.cpp'
+            'src/candongle_kvaser_win.cpp'
           ],
           'msvs_settings': {
             'VCCLCompilerTool': {

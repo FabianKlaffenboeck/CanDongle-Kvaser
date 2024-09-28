@@ -1,25 +1,27 @@
 import {AdapterInfo, CanDevicesInterface, CanInterface, CanMessage, OpenOptions} from "@fklab/candongle-interface";
+import {
+    asyncClose,
+    asyncListCanDevices,
+    asyncOpenCanChannel,
+    asyncRead,
+    asyncSetMessageCallback, asyncWrite
+} from "./load-bindings";
 
-const kvaserCan = require('../build/Release/kvaser_can.node');
 
 export type WindowsCanKvaserInterface = CanDevicesInterface<WindowsCanDeviceKvaser, OpenOptions>
 
 export const WindowsCanKvaser: WindowsCanKvaserInterface = {
 
-    // List available CAN devices (for simplicity, mock device info)
     async list(): Promise<AdapterInfo[]> {
-        const devices = await kvaserCan.listChannels();
-
+        const devices = await asyncListCanDevices();
         return devices.map((device: any) => ({
-            path: device
-        }))
+            name: device.name,
+        }));
     },
 
-    // Open a specific CAN device by its path and baud rate
     async open(options: OpenOptions): Promise<WindowsCanDeviceKvaser> {
-        const canChannel = new WindowsCanDeviceKvaser(options.path, options.baudRate);
-        await canChannel.open();
-        return canChannel;
+        const handle = await asyncOpenCanChannel(options.path, options.baudRate);
+        return new WindowsCanDeviceKvaser(handle);
     }
 }
 
@@ -28,68 +30,46 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
  * The Windows binding layer
  */
 export class WindowsCanDeviceKvaser implements CanInterface {
-    private channel: any;
-    public isOpen: boolean = false;
-    private messageCallback: (id: number, data: number[], length: number) => void; // Store the callback
+    private handle: number;
+    public isOpen: boolean;
 
-    constructor(private path: string, private baudRate: number) {
-    }
-
-    // Open the CAN channel
-    async open(): Promise<void> {
-        if (this.isOpen) {
-            throw new Error('CAN channel is already open');
-        }
-
-        this.channel = new kvaserCan.CanChannel(this.path, this.baudRate);
-        await this.channel.openChannel();
+    constructor(handle: number) {
+        this.handle = handle;
         this.isOpen = true;
     }
 
-    // Close the CAN channel
     async close(): Promise<void> {
         if (!this.isOpen) {
-            throw new Error('CAN channel is not open');
+            throw new Error("CAN channel is already closed");
         }
-
-        await this.channel.closeChannel();
+        await asyncClose(this.handle);
         this.isOpen = false;
     }
 
-    // Read the next CAN message from the channel
     async read(): Promise<CanMessage> {
-        return new Promise((resolve, reject) => {
-            this.channel.setMessageCallback((msg: CanMessage) => {
-                const canMessage: CanMessage = {
-                    id: msg.id,
-                    data: msg.data,
-                    time: msg.time,
-                };
-
-                resolve(canMessage);
-            });
-        });
+        if (!this.isOpen) {
+            throw new Error("CAN channel is closed");
+        }
+        const message = await asyncRead(this.handle);
+        return {
+            id: message.id,
+            data: Array.from(message.data),
+            time: message.time,
+        };
     }
 
-    // Write a CAN message to the channel
+    setMessageCallback(callback: (id: number, data: number[], length: number) => void): void {
+        if (!this.isOpen) {
+            throw new Error("CAN channel is closed");
+        }
+        asyncSetMessageCallback(this.handle, callback);
+    }
+
     async write(buffer: number[]): Promise<void> {
         if (!this.isOpen) {
-            throw new Error('CAN channel is not open');
+            throw new Error("CAN channel is closed");
         }
-
-        await this.channel.sendMessage(buffer);
-    }
-
-    // Register a callback to be triggered when a CAN message arrives
-    setMessageCallback(callback: (id: number, data: number[], length: number) => void): void {
-        this.messageCallback = callback; // Store the callback
-
-        // Register the callback with the native module
-        kvaserCan.setMessageCallback((id: number, data: number[], length: number) => {
-            if (this.messageCallback) {
-                this.messageCallback(id, data, length); // Call the stored callback
-            }
-        });
+        await asyncWrite(this.handle, buffer);
     }
 }
 

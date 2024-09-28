@@ -4,14 +4,14 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "rm -rf dist && tsc -p tsconfig-build.json",
+    "clean": "rm -rf dist",
+    "build": " tsc -p tsconfig-build.json",
+    "install": "node-gyp-build",
     "prebuildify": "prebuildify --napi --target 14.0.0 --force --strip --verbose",
     "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose",
     "rebuild": "node-gyp rebuild",
     "format": "eslint lib test bin --fix",
     "lint": "eslint lib test bin && cc --verbose",
-    "test:watch": "mocha -w",
     "semantic-release": "semantic-release",
     "typecheck": "tsc"
   },
@@ -23,8 +23,8 @@
     "@fklab/candongle-interface": "0.0.1",
     "cmake-js": "^7.3.0",
     "debug": "4.3.5",
-    "node-addon-api": "7.0.0",
-    "node-gyp-build": "^4.6.0"
+    "node-addon-api": "8.1.0",
+    "node-gyp-build": "4.6.0"
   },
   "devDependencies": {
     "@semantic-release/exec": "6.0.3",
@@ -42,15 +42,31 @@
     "esbuild-register": "3.5.0",
     "eslint": "8.52.0",
     "mocha": "10.2.0",
-    "node-abi": "3.45.0",
-    "node-gyp": "9.4.0",
+    "node-abi": "3.68.0",
+    "node-gyp": "10.2.0",
     "nyc": "15.1.0",
-    "prebuildify": "5.0.1",
-    "prebuildify-cross": "5.0.0",
+    "prebuildify": "6.0.1",
+    "prebuildify-cross": "5.1.0",
     "semantic-release": "21.1.0",
     "shx": "0.3.4",
     "sinon": "17.0.1",
     "typescript": "5.1.6"
+  },
+  "cc": {
+    "filter": [
+      "legal/copyright",
+      "build/include"
+    ],
+    "files": [
+      "src/*.cpp",
+      "src/*.h"
+    ],
+    "linelength": "120"
+  },
+  "binary": {
+    "napi_versions": [
+      6
+    ]
   },
   "engines": {
     "node": ">=16.0.0"
