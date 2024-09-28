@@ -105,6 +105,6 @@ publish-to-gitlab-registry:
 #  only:
 #    - tags
   dependencies:
-    - build-for-windows
+    - prebuild_windows
 #    - build-for-ubuntu
 #    - build-for-macos
