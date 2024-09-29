@@ -14,7 +14,7 @@ build-for-windows:
     - npm install --save node-addon-api
     - node-gyp configure --arch=x64 --target_platform=win32
     - node-gyp build
-    - mkdir ./prebuilds/win32-x64/
+    - mkdir -p ./prebuilds/win32-x64/
 #    - ls
 #    - cd build/
 #    - ls
