@@ -4,16 +4,16 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": " tsc -p tsconfig-build.json",
     "install": "node-gyp-build",
-    "prebuildify": "prebuildify --napi --target 14.0.0 --force --strip --verbose",
-    "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose",
-    "rebuild": "node-gyp rebuild",
     "format": "eslint lib test bin --fix",
     "lint": "eslint lib test bin && cc --verbose",
-    "semantic-release": "semantic-release",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "clean": "rm -rf dist",
+    "build": " tsc -p tsconfig-build.json",
+    "rebuild": "node-gyp rebuild",
+    "prebuildify": "prebuildify --napi --target 14.0.0 --force --strip --verbose",
+    "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose",
+    "prebuild-win": "cross-env TARGET_PLATFORM=win32 prebuildify --all --verbose"
   },
   "keywords": [
     "CAN BUS",

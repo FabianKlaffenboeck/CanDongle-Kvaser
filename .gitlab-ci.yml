@@ -9,10 +9,11 @@ build-for-windows:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
+    - apt-get update && apt-get install -y wine
     - npm install -g node-gyp
     - npm install
     - npm install --save node-addon-api
-    - npm run prebuildify
+    - npm run prebuildify  -- --target=win32
   artifacts:
     paths:
       - prebuilds/**
