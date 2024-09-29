@@ -14,7 +14,7 @@ build-for-windows:
     - npm install --save node-addon-api
     - node-gyp configure --arch=x64 --target_platform=win32
     - node-gyp build
-    - mv build/Release/your_native_module.node prebuilds/win32-x64/@fklab+candongle-kvaser.node
+    - mv build/Release/candongle-kvaser.node prebuilds/win32-x64/@fklab+candongle-kvaser.node
   artifacts:
     paths:
       - build/  # Save the build artifacts
