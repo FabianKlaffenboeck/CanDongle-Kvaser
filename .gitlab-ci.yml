@@ -14,6 +14,11 @@ build-for-windows:
     - npm install --save node-addon-api
     - node-gyp configure --arch=x64 --target_platform=win32
     - node-gyp build
+    - ls
+    - cd build/
+    - ls
+    - cd ./Release
+    - ls
     - mv build/Release/candongle-kvaser.node prebuilds/win32-x64/@fklab+candongle-kvaser.node
   artifacts:
     paths:
