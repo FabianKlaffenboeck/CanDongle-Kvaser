@@ -12,7 +12,7 @@
     "build": " tsc -p tsconfig-build.json",
     "rebuild": "node-gyp rebuild",
     "prebuildify": "prebuildify --napi --target 14.0.0 --force --strip --verbose",
-    "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose",
+    "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose"
   },
   "keywords": [
     "CAN BUS",
