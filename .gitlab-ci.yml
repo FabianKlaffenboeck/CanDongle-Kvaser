@@ -2,71 +2,21 @@ stages:
   - build
   - publish
 
-#variables:
-#  TARGET_ARCH: "x64"  # Adjust if needed (e.g., ia32)
-#  PACKAGE_NAME: "candongle-kvaser"  # Replace with your actual package name
-#
-#build-for-windows:
-#  stage: build
-#  image: node:22.8.0
-#  before_script:
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-#  script:
-#    - npm install -g node-gyp
-#    - npm install
-#    - npm install --save node-addon-api
-#    - node-gyp configure --arch=$TARGET_ARCH --target_platform=win32
-#    - node-gyp build
-#  artifacts:
-#    paths:
-#      - build/  # Save the build artifacts
-
-#prebuild_linux:
-#  image: node:16
-#  stage: build
-#  before_script:
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-#  script:
-#    - npm install -g prebuildify-cross
-#    - npm install
-#    - prebuildify-cross --target=linux-x64
-#  artifacts:
-#    paths:
-#      - prebuilds/**
-
-prebuild_windows:
-  image: node:22
+build-for-windows:
   stage: build
+  image: node:22.8.0
   before_script:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
-    - apt-get update && apt-get install -y python3 make g++
     - npm install -g node-gyp
-    - npm install -g prebuildify-cross
     - npm install
-    - npm run prebuildify
+    - npm install --save node-addon-api
+    - node-gyp configure --arch=x64 --target_platform=win32
+    - node-gyp build
   artifacts:
     paths:
       - prebuilds/**
-
-
-
-#prebuild_darwin:
-#  image: node:16
-#  stage: build
-#  before_script:
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-#  script:
-#    - npm install -g prebuildify-cross
-#    - npm install
-#    - prebuildify-cross --target=darwin-x64
-#  artifacts:
-#    paths:
-#      - prebuilds/**
 
 #build-for-ubuntu:
 #  stage: build
@@ -111,7 +61,6 @@ publish-to-gitlab-registry:
 #  only:
 #    - tags
   dependencies:
-    - prebuild_windows
-    - prebuild_electron
+    - build-for-windows
 #    - build-for-ubuntu
 #    - build-for-macos
