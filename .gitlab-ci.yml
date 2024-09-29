@@ -15,15 +15,10 @@ build-for-windows:
     - node-gyp configure --arch=x64 --target_platform=win32
     - node-gyp build
     - mkdir -p ./prebuilds/win32-x64/
-#    - ls
-#    - cd build/
-#    - ls
-#    - cd ./Release
-#    - ls
     - mv ./build/Release/candongle-kvaser.node ./prebuilds/win32-x64/@fklab+candongle-kvaser.node
   artifacts:
     paths:
-      - build/  # Save the build artifacts
+      - prebuilds/**
 
 #build-for-ubuntu:
 #  stage: build
