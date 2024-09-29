@@ -13,7 +13,7 @@ build-for-windows:
     - npm install -g node-gyp
     - npm install
     - npm install --save node-addon-api
-    - npm run prebuildify  -- --target=win32
+    - npm run prebuild-win -- --target=win32
   artifacts:
     paths:
       - prebuilds/**
