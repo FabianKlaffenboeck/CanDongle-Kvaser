@@ -4,36 +4,20 @@ stages:
 
 build-for-windows:
   stage: build
-  image: electronuserland/builder:wine
+  image: node:22.8.0
   before_script:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
-    - npm install
     - npm install -g node-gyp
-    - npm install -g prebuildify
-    - npm run prebuildify  # This command builds for Windows  artifacts:
+    - npm install
+    - npm install --save node-addon-api
+    - node-gyp configure --arch=x64 --target_platform=win32
+    - node-gyp build
+    - mv build/Release/your_native_module.node prebuilds/win32-x64/@fklab+candongle-kvaser.node
   artifacts:
     paths:
-      - prebuilds/**  # Adjust based on where your prebuilt binaries are stored
-
-
-#build-for-windows:
-#  stage: build
-#  image: node:22.8.0
-#  before_script:
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-#    - apt-get update && apt-get install -y wine
-#  script:
-#    - npm install
-#    - npm install -g node-gyp
-#    - npm install --save-dev cross-env
-#    - npm install -g prebuildify
-#    - npm run build-win  # This command builds for Windows
-#  artifacts:
-#    paths:
-#      - prebuilds/**  # Adjust based on where your prebuilt binaries are stored
+      - build/  # Save the build artifacts
 
 #build-for-ubuntu:
 #  stage: build
