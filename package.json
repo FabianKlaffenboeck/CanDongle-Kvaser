@@ -13,7 +13,7 @@
     "rebuild": "node-gyp rebuild",
     "prebuildify": "prebuildify --napi --target 14.0.0 --force --strip --verbose",
     "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose",
-    "prebuild-win": "cross-env TARGET_PLATFORM=win32 prebuildify --all --verbose"
+    "prebuild": "cross-env TARGET_PLATFORM=win32 prebuildify --all --verbose"
   },
   "keywords": [
     "CAN BUS",
