@@ -47,26 +47,12 @@ prebuild_windows:
     - npm install -g node-gyp
     - npm install -g prebuildify-cross
     - npm install
-    - prebuildify-cross --target=win32-x64
+    - npm run prebuildify
   artifacts:
     paths:
       - prebuilds/**
 
-prebuild_electron:
-  image: node:22
-  stage: build
-  before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-  script:
-    - apt-get update && apt-get install -y python3 make g++
-    - npm install -g node-gyp
-    - npm install -g prebuildify-cross
-    - npm install
-    - prebuildify-cross --target=electron@30.0.1 --arch=x64
-  artifacts:
-    paths:
-      - prebuilds/**
+
 
 #prebuild_darwin:
 #  image: node:16
