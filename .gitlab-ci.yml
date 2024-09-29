@@ -59,7 +59,7 @@ publish-to-gitlab-registry:
     - tar czfv prebuilds-${VERSION}.tar.gz prebuilds
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
-  #    - npm publish
+    - npm publish
   #  only:
   #    - tags
   dependencies:
