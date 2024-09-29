@@ -43,11 +43,27 @@ prebuild_windows:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
-    - apt-get update && apt-get install -y python3 make g++  # Install dependencies
+    - apt-get update && apt-get install -y python3 make g++
     - npm install -g node-gyp
     - npm install -g prebuildify-cross
     - npm install
     - prebuildify-cross --target=win32-x64
+  artifacts:
+    paths:
+      - prebuilds/**
+
+prebuild_electron:
+  image: node:22
+  stage: build
+  before_script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+  script:
+    - apt-get update && apt-get install -y python3 make g++
+    - npm install -g node-gyp
+    - npm install -g prebuildify-cross
+    - npm install
+    - prebuildify-cross --target=electron@30.0.1 --arch=x64
   artifacts:
     paths:
       - prebuilds/**
@@ -101,6 +117,7 @@ publish-to-gitlab-registry:
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
     - npm install
     - npm run build
+    - tar czfv prebuilds-${VERSION}.tar.gz prebuilds
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
     - npm publish
@@ -108,5 +125,6 @@ publish-to-gitlab-registry:
 #    - tags
   dependencies:
     - prebuild_windows
+    - prebuild_electron
 #    - build-for-ubuntu
 #    - build-for-macos

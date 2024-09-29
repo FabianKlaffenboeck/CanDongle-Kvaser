@@ -3,7 +3,7 @@
     'openssl_fips': ''
   },
   'targets': [{
-    'target_name': 'kvaser_can',
+    'target_name': 'candongle-kvaser',
     'include_dirs': ["<!(node -p \"require('node-addon-api').include_dir\")"],
     'cflags!': [ '-fno-exceptions' ],
     'cflags_cc!': [ '-fno-exceptions' ],
