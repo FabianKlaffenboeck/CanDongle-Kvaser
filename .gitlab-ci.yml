@@ -5,6 +5,11 @@ stages:
 build-for-windows:
   stage: build
   image: node:22.8.0
+  variables:
+    CC: i686-w64-mingw32-gcc
+    CXX: i686-w64-mingw32-g++
+    AR: i686-w64-mingw32-ar
+    RANLIB: i686-w64-mingw32-ranlib
   before_script:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
@@ -13,9 +18,11 @@ build-for-windows:
     - npm install
     - apt-get update -y
     - apt-get install -y mingw-w64
+    - apt install mingw-w64
     - npm install --save node-addon-api
     - npm install --save node-pre-gyp
-    - node-pre-gyp build --target_arch=x64 --target_platform=win32
+    - node-pre-gyp configure --target_arch=ia32
+    - node-pre-gyp build --target_arch=ia32
 
 
 #build-for-ubuntu:

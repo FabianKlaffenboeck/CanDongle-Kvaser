@@ -11,6 +11,8 @@
     'conditions': [
       ['OS=="win"',
         {
+          'cflags': [ '-D_WIN32' ],
+          'defines': [ 'WIN32' ],
           'defines': ['CHECK_NODE_MODULE_VERSION'],
           "include_dirs": [
             "Canlib/INC"
