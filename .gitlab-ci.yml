@@ -41,13 +41,32 @@ build-for-windows:
     - npm install -g node-gyp
     - npm install
     - npm install --save node-addon-api
-    - node-gyp configure --arch=x64 --target_platform=win32
-    - node-gyp build
-    - mkdir -p ./prebuilds/win32-x64/
-    - mv ./build/Release/candongle-kvaser.node ./prebuilds/win32-x64/@fklab+candongle-kvaser.node
+    - apt-get update -y
+    - apt-get install -y mingw-w64
+    - apt install gcc-mingw-w64-i686
+    - apt install gcc-mingw-w64-x86-64
+    - i686-w64-mingw32-gcc --version
   artifacts:
     paths:
       - prebuilds/**
+
+#build-for-windows:
+#  stage: build
+#  image: node:22.8.0
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm install -g node-gyp
+#    - npm install
+#    - npm install --save node-addon-api
+#    - node-gyp configure --arch=x64 --target_platform=win32
+#    - node-gyp build
+#    - mkdir -p ./prebuilds/win32-x64/
+#    - mv ./build/Release/candongle-kvaser.node ./prebuilds/win32-x64/@fklab+candongle-kvaser.node
+#  artifacts:
+#    paths:
+#      - prebuilds/**
 
 
 #build-for-ubuntu:
