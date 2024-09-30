@@ -27,6 +27,8 @@ build_windows:
     CC: x86_64-w64-mingw32-gcc
     CXX: x86_64-w64-mingw32-g++
   before_script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
     - apt-get update -y
     - apt-get install -y mingw-w64
     - npm install
