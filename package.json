@@ -4,7 +4,6 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "install": "node-gyp-build",
     "format": "eslint lib test bin --fix",
     "lint": "eslint lib test bin && cc --verbose",
     "typecheck": "tsc",
