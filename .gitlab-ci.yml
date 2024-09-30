@@ -39,7 +39,7 @@ build-for-windows:
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
     - npm install -g node-gyp
-    - npm install node-pre-gyp
+    - npm install -g node-pre-gyp
     - npm install
     - npm install --save node-addon-api
     - apt-get update -y
