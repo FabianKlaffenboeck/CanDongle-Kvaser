@@ -2,6 +2,8 @@ stages:
   - build
   - publish
 
+
+
 build-for-windows:
   stage: build
   image: node:22.8.0
@@ -16,6 +18,7 @@ build-for-windows:
   script:
     - npm install -g node-gyp
     - npm install
+    - npm install --save node-addon-api
     - apt-get update -y
     - apt-get install -y mingw-w64
     - apt install gcc-mingw-w64-i686
@@ -26,6 +29,25 @@ build-for-windows:
     - npm install --save node-pre-gyp
     - node-pre-gyp configure --target_arch=ia32
     - node-pre-gyp build --target_arch=ia32
+
+
+#build-for-windows:
+#  stage: build
+#  image: node:22.8.0
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm install -g node-gyp
+#    - npm install
+#    - npm install --save node-addon-api
+#    - node-gyp configure --arch=x64 --target_platform=win32
+#    - node-gyp build
+#    - mkdir -p ./prebuilds/win32-x64/
+#    - mv ./build/Release/candongle-kvaser.node ./prebuilds/win32-x64/@fklab+candongle-kvaser.node
+#  artifacts:
+#    paths:
+#      - prebuilds/**
 
 
 #build-for-ubuntu:
@@ -55,22 +77,22 @@ build-for-windows:
 #    paths:
 #      - build/  # Save the build artifacts
 
-#publish-to-gitlab-registry:
-#  stage: publish
-#  image: node:22.8.0
-#  script:
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-#    - npm install
-#    - npm run build
-#    - ls
-#    - tar czfv prebuilds-0.0.1.tar.gz prebuilds
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
-#    - npm publish
-#  #  only:
-#  #    - tags
-#  dependencies:
-#    - build-for-windows
-##    - build-for-ubuntu
-##    - build-for-macos
+publish-to-gitlab-registry:
+  stage: publish
+  image: node:22.8.0
+  script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+    - npm install
+    - npm run build
+    - ls
+    - tar czfv prebuilds-0.0.1.tar.gz prebuilds
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - npm publish
+  #  only:
+  #    - tags
+  dependencies:
+    - build-for-windows
+#    - build-for-ubuntu
+#    - build-for-macos
