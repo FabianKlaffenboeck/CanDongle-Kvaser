@@ -11,10 +11,12 @@ build-for-windows:
   script:
     - npm install -g node-gyp
     - npm install
+    - apt-get update -y
     - apt-get install -y mingw-w64
     - npm install --save node-addon-api
     - npm install --save node-pre-gyp
     - node-pre-gyp build --target_arch=x64 --target_platform=win32
+
 
 #build-for-ubuntu:
 #  stage: build
