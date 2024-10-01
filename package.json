@@ -4,14 +4,18 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig-build.json",
+    "install": "node-gyp-build",
+    "prebuildify": "prebuildify --napi --target 14.0.0 --force --strip --verbose",
+    "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose",
+    "rebuild": "node-gyp rebuild",
     "format": "eslint lib test bin --fix",
     "lint": "eslint lib test bin && cc --verbose",
-    "typecheck": "tsc",
-    "clean": "rm -rf dist",
-    "build": " tsc -p tsconfig-build.json",
-    "rebuild": "node-gyp rebuild",
-    "prebuildify": "prebuildify --napi --target 14.0.0 --force --strip --verbose",
-    "prebuildify-cross": "prebuildify-cross --napi --target 14.0.0 --force --strip --verbose"
+    "test": "nyc --reporter lcov --reporter text mocha",
+    "test:arduino": "TEST_PORT=$(./bin/find-arduino.ts) npm test",
+    "test:watch": "mocha -w",
+    "semantic-release": "semantic-release",
+    "typecheck": "tsc"
   },
   "keywords": [
     "CAN BUS",
@@ -50,6 +54,7 @@
     "sinon": "17.0.1",
     "typescript": "5.1.6"
   },
+  "gypfile": true,
   "cc": {
     "filter": [
       "legal/copyright",
@@ -62,9 +67,9 @@
     "linelength": "120"
   },
   "binary": {
-    "module_name": "@fklab/candongle-kvaser",
-    "module_path": "./prebuilds",
-    "host": "https://your_module.s3-us-west-1.amazonaws.com"
+    "napi_versions": [
+      6
+    ]
   },
   "engines": {
     "node": ">=16.0.0"
