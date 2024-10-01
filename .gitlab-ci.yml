@@ -2,40 +2,44 @@ stages:
   - build
   - publish
 
+build-for-win32-x86:
+  stage: build
+  image: node:22.8.0
+  tags:
+    - Windows
+    - x86
+  before_script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+  script:
+    - npm install
+    - npm run prebuildify
+  artifacts:
+    paths:
+      - prebuilds/
 
-#    - name: darwin
-#      os: macos-11
-#      node: x64
-#      command: prebuildify
-#      args: --arch x64+arm64
-#    - name: win32-x86
-#      os: windows-2019
-#      node: x86
-#      command: prebuildify
-#    - name: win32-x64
-#      os: windows-2019
-#      node: x64
-#      command: prebuildify
-
-#build-for-windows:
-#  stage: build
-#  image: node:22.8.0
-#  before_script:
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-#  script:
-#    - npm install -g node-gyp
-#    - npm install
-#    - npm install --save node-addon-api
-#    - node-gyp configure --arch=x64 --target_platform=win32
-#    - node-gyp build
-#  artifacts:
-#    paths:
-#      - prebuilds/**
+build-for-win32-x64:
+  stage: build
+  image: node:22.8.0
+  tags:
+    - Windows
+    - x64_86
+  before_script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+  script:
+    - npm install
+    - npm run prebuildify
+  artifacts:
+    paths:
+      - prebuilds/
 
 build-for-linux-x64:
   stage: build
   image: node:22.8.0
+  tags:
+    - Docker
+    - x64_86
   before_script:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
@@ -49,6 +53,9 @@ build-for-linux-x64:
 build-for-linux-arm:
   stage: build
   image: node:22.8.0
+  tags:
+    - Docker
+    - x64_86
   before_script:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
@@ -62,6 +69,9 @@ build-for-linux-arm:
 build-for-android-arm:
   stage: build
   image: node:22.8.0
+  tags:
+    - Docker
+    - x64_86
   before_script:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
@@ -72,36 +82,33 @@ build-for-android-arm:
     paths:
       - prebuilds/
 
-#build-for-macos:
-#  stage: build
-#  tags:
-#    - macos
-#  script:
-#    - brew install python
-#    - npm install -g node-gyp
-#    - npm install
-#    - node-gyp configure --arch=$TARGET_ARCH --target_platform=darwin
-#    - node-gyp build
-#  artifacts:
-#    paths:
-#      - build/  # Save the build artifacts
+#    - name: darwin
+#      os: macos-11
+#      node: x64
+#      command: prebuildify
+#      args: --arch x64+arm64
 
-#publish-to-gitlab-registry:
-#  stage: publish
-#  image: node:22.8.0
-#  script:
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-#    - npm install
-#    - npm run build
-#    - ls
-#    - tar czfv prebuilds-0.0.1.tar.gz prebuilds
-#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
-#    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
-#    - npm publish
-#  #  only:
-#  #    - tags
-#  dependencies:
-#    - build-for-windows
-##    - build-for-ubuntu
-##    - build-for-macos
+publish-to-gitlab-registry:
+  stage: publish
+  image: node:22.8.0
+  tags:
+    - Docker
+    - x64_86
+  script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+    - npm install
+    - npm run build
+    - ls
+    - tar czfv prebuilds-0.0.1.tar.gz prebuilds
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" >> .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - npm publish
+  #  only:
+  #    - tags
+  dependencies:
+    - build-for-win32-x86
+    - build-for-win32-x64
+    - build-for-linux-x64
+    - build-for-linux-arm
+    - build-for-android-arm
