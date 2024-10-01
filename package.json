@@ -62,6 +62,8 @@
     "linelength": "120"
   },
   "binary": {
+    "module_name": "your_module",
+    "module_path": "./lib/binding/",
     "napi_versions": [
       6
     ]
