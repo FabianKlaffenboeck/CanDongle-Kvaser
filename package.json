@@ -65,9 +65,6 @@
     "module_name": "your_module",
     "module_path": "./lib/binding/",
     "host": "https://your_module.s3-us-west-1.amazonaws.com",
-    "napi_versions": [
-      6
-    ]
   },
   "engines": {
     "node": ">=16.0.0"
