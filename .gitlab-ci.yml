@@ -106,9 +106,9 @@ publish-to-gitlab-registry:
     - npm publish
   #  only:
   #    - tags
-  dependencies:
-    - build-for-win32-x86
-    - build-for-win32-x64
-    - build-for-linux-x64
-    - build-for-linux-arm
-    - build-for-android-arm
+#  dependencies:
+#    - build-for-win32-x86
+#    - build-for-win32-x64
+#    - build-for-linux-x64
+#    - build-for-linux-arm
+#    - build-for-android-arm
