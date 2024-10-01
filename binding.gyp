@@ -12,12 +12,15 @@
       ['OS=="win"',
         {
           'defines': ['CHECK_NODE_MODULE_VERSION'],
-          'sources': [
-            'src/candongle_kvaser_win.cpp'
+          "include_dirs": [
+            "src/Canlib/INC"
           ],
           "libraries": [
-            "src/Canlib/Lib/MS/canlib32.lib",
-            "src/Canlib/Lib/x64/canlib32.lib"
+            "<(module_root_dir)/src/Canlib/Lib/x64/canlib32.lib",
+            "<(module_root_dir)/src/Canlib/Lib/MS/canlib32.lib"
+          ],
+          'sources': [
+            'src/candongle_kvaser_win.cpp'
           ],
           'msvs_settings': {
             'VCCLCompilerTool': {
