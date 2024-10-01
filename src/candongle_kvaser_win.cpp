@@ -2,9 +2,8 @@
 #include <napi.h>
 // #include "../node_modules/node-addon-api/napi.h"
 #include <thread>
-#include <vector>
 #include <cstring>
-#include "../Canlib/INC/canlib.h"  // Include your CAN library headers here
+#include "Canlib/INC/canlib.h"  // Include your CAN library headers here
 
 Napi::ThreadSafeFunction tsfn;
 
