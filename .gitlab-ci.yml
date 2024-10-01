@@ -35,16 +35,29 @@ stages:
 
 build-for-linux-x64:
   stage: build
-  image: node:22.8.0
+  image: ghcr.io/prebuild/centos7-devtoolset7:2.2.0
   before_script:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
-    - npm i
     - npm run prebuildify-cross -- -i centos7-devtoolset7 -i alpine
   artifacts:
     paths:
       - prebuilds/
+
+
+#build-for-linux-x64:
+#  stage: build
+#  image: node:22.8.0
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm i
+#    - npm run prebuildify-cross -- -i centos7-devtoolset7 -i alpine
+#  artifacts:
+#    paths:
+#      - prebuilds/
 
 #build-for-linux-arm:
 #  stage: build
