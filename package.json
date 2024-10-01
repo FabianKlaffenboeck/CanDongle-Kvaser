@@ -62,8 +62,8 @@
     "linelength": "120"
   },
   "binary": {
-    "module_name": "your_module",
-    "module_path": "./lib/binding/",
+    "module_name": "@fklab/candongle-kvaser",
+    "module_path": "./prebuilds",
     "host": "https://your_module.s3-us-west-1.amazonaws.com"
   },
   "engines": {
