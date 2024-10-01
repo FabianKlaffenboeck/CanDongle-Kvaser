@@ -2,85 +2,85 @@ stages:
   - build
   - publish
 
-build-for-win32-x86:
-  stage: build
-  image: node:22.8.0
-  tags:
-    - Windows
-    - x86
-  before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-  script:
-    - npm install
-    - npm run prebuildify
-  artifacts:
-    paths:
-      - prebuilds/
-
-build-for-win32-x64:
-  stage: build
-  image: node:22.8.0
-  tags:
-    - Windows
-    - x64_86
-  before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-  script:
-    - npm install
-    - npm run prebuildify
-  artifacts:
-    paths:
-      - prebuilds/
-
-build-for-linux-x64:
-  stage: build
-  image: node:22.8.0
-  tags:
-    - Docker
-    - x64_86
-  before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-  script:
-    - npm install
-    - npm run prebuildify-cross -- -i centos7-devtoolset7 -i alpine
-  artifacts:
-    paths:
-      - prebuilds/
-
-build-for-linux-arm:
-  stage: build
-  image: node:22.8.0
-  tags:
-    - Docker
-    - x64_86
-  before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-  script:
-    - npm install
-    - npm run prebuildify-cross -- -i linux-arm64-lts -i linux-armv7 -i linux-armv6
-  artifacts:
-    paths:
-      - prebuilds/
-
-build-for-android-arm:
-  stage: build
-  image: node:22.8.0
-  tags:
-    - Docker
-    - x64_86
-  before_script:
-    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
-    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
-  script:
-    - npm install
-    - npm run prebuildify-cross -- -i android-arm64 -i android-armv7
-  artifacts:
-    paths:
-      - prebuilds/
+#build-for-win32-x86:
+#  stage: build
+#  image: node:22.8.0
+#  tags:
+#    - Windows
+#    - x86
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm install
+#    - npm run prebuildify
+#  artifacts:
+#    paths:
+#      - prebuilds/
+#
+#build-for-win32-x64:
+#  stage: build
+#  image: node:22.8.0
+#  tags:
+#    - Windows
+#    - x64_86
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm install
+#    - npm run prebuildify
+#  artifacts:
+#    paths:
+#      - prebuilds/
+#
+#build-for-linux-x64:
+#  stage: build
+#  image: node:22.8.0
+#  tags:
+#    - Docker
+#    - x64_86
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm install
+#    - npm run prebuildify-cross -- -i centos7-devtoolset7 -i alpine
+#  artifacts:
+#    paths:
+#      - prebuilds/
+#
+#build-for-linux-arm:
+#  stage: build
+#  image: node:22.8.0
+#  tags:
+#    - Docker
+#    - x64_86
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm install
+#    - npm run prebuildify-cross -- -i linux-arm64-lts -i linux-armv7 -i linux-armv6
+#  artifacts:
+#    paths:
+#      - prebuilds/
+#
+#build-for-android-arm:
+#  stage: build
+#  image: node:22.8.0
+#  tags:
+#    - Docker
+#    - x64_86
+#  before_script:
+#    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
+#    - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
+#  script:
+#    - npm install
+#    - npm run prebuildify-cross -- -i android-arm64 -i android-armv7
+#  artifacts:
+#    paths:
+#      - prebuilds/
 
 #    - name: darwin
 #      os: macos-11
