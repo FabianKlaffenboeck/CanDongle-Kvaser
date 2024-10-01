@@ -37,7 +37,7 @@ build-for-linux-x64:
   stage: build
   image: node:22.8.0
   script:
-    - npm ci
+    - npm i
     - npm run prebuildify-cross --  -i centos7-devtoolset7 -i alpine
   artifacts:
     paths:
@@ -47,7 +47,7 @@ build-for-linux-arm:
   stage: build
   image: node:22.8.0
   script:
-    - npm ci
+    - npm i
     - npm run prebuildify-cross -- -i linux-arm64-lts -i linux-armv7 -i linux-armv6
   artifacts:
     paths:
@@ -57,7 +57,7 @@ build-for-android-arm:
   stage: build
   image: node:22.8.0
   script:
-    - npm ci
+    - npm i
     - npm run prebuildify-cross -- -i android-arm64 -i android-armv7
   artifacts:
     paths:
