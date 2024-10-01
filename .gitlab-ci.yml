@@ -47,7 +47,8 @@ build-for-windows:
     - apt install gcc-mingw-w64-i686
     - apt install gcc-mingw-w64-x86-64
     - node-pre-gyp --help
-  #  - node-pre-gyp build --target_arch=ia32 --target_platform=win32
+#    - node-pre-gyp clean  build --target_arch=ia32 --target_platform=win32
+    - node-pre-gyp clean  build
   artifacts:
     paths:
       - prebuilds/**
