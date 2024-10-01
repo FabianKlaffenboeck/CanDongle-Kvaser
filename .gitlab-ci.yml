@@ -40,7 +40,7 @@ build-for-linux-x64:
     - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/packages/npm/" >> .npmrc
     - echo "//${CI_SERVER_HOST}/api/v4/packages/npm/:_authToken=${NPM_TOKEN}" >> .npmrc
   script:
-    - npm i
+    - npm install
     - npm run prebuildify-cross -- -i centos7-devtoolset7 -i alpine
   artifacts:
     paths:
