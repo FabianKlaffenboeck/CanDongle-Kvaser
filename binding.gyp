@@ -15,6 +15,10 @@
           'sources': [
             'src/candongle_kvaser_win.cpp'
           ],
+          "libraries": [
+            "src/Canlib/Lib/MS/canlib32.lib",
+            "src/Canlib/Lib/x64/canlib32.lib"
+          ],
           'msvs_settings': {
             'VCCLCompilerTool': {
               'ExceptionHandling': '1',
