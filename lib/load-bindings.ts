@@ -3,8 +3,9 @@ import {promisify} from 'util'
 import {join} from 'path'
 
 // Load the native binding using node-gyp-build
-console.log('Attempting to load native module from:', join(__dirname, '../'));
-const binding = nodeGypBuild(join(__dirname, '../')) as any;
+import path from "path";
+
+const binding = nodeGypBuild(path.join(__dirname, 'node_modules/@fklab/candongle-kvaser')) as any;
 
 // Promisify the native methods or provide a fallback that throws an error
 export const asyncClose = binding.close ? promisify(binding.close) : async () => {
