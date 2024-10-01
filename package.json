@@ -61,7 +61,6 @@
       "build/include"
     ],
     "files": [
-      "prebuilds/",
       "src/"
     ],
     "linelength": "120"
