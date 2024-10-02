@@ -3,7 +3,7 @@
   "compilerOptions": {
     "outDir": "dist",
     "noEmit": false,
-    "module": "commonjs"
+    "module": "es2020"
   },
   "exclude": [
     "node_modules",
