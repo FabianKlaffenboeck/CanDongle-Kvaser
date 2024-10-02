@@ -2,9 +2,9 @@
   "compilerOptions": {
     "noEmit": true,
     "allowJs": false,
-    "target": "es2017",
+    "target": "es2020",
     "moduleResolution": "node",
-    "module": "commonjs",
+    "module": "es2020",
     "noImplicitAny": true,
     "strictNullChecks": true,
     "declaration": true,

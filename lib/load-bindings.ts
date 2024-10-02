@@ -1,9 +1,15 @@
 import nodeGypBuild from 'node-gyp-build'
 import {promisify} from 'util'
 import {join} from 'path'
-
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 // Load the native binding using node-gyp-build
-const binding = nodeGypBuild(join(__dirname, '../node_modules/@fklab/candongle-kvaser/bin/win32-x64-128')) as any;
+
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+const binding = nodeGypBuild(join(__dirname, '../')) as any;
 
 // Promisify the native methods or provide a fallback that throws an error
 export const asyncClose = binding.close ? promisify(binding.close) : async () => {
