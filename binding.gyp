@@ -11,6 +11,7 @@
     'conditions': [
       ['OS=="win"',
         {
+          'win_delay_load_hook': 'true',
           'defines': ['CHECK_NODE_MODULE_VERSION'],
           "include_dirs": [
             "src/Canlib/INC"
