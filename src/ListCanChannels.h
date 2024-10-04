@@ -19,7 +19,6 @@ std::vector<AdapterInfo> ListChannels() {
     canStatus stat;
     int number_of_channels;
     int device_channel;
-    char device_name[255];
 
     // Get number of channels
     stat = canGetNumberOfChannels(&number_of_channels);
@@ -33,12 +32,11 @@ std::vector<AdapterInfo> ListChannels() {
     }
 
     for (int i = 0; i < number_of_channels; i++) {
+        char device_name[255];
         stat = canGetChannelData(i, canCHANNELDATA_DEVDESCR_ASCII, device_name, sizeof(device_name));
         CheckForError((char *) "canGetChannelData", stat);
         stat = canGetChannelData(i, canCHANNELDATA_CHAN_NO_ON_CARD, &device_channel, sizeof(device_channel));
         CheckForError((char *) "canGetChannelData", stat);
-        printf("%s %d %s %d\n", "Found channel:", i, device_name, (device_channel + 1));
-
         std::stringstream ss;
         ss << "Found channel: " << i << " " << device_name << " " << (device_channel + 1);
         AdapterInfo info;

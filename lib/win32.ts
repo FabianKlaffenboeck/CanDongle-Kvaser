@@ -13,7 +13,9 @@ export type WindowsCanKvaserInterface = CanDevicesInterface<WindowsCanDeviceKvas
 export const WindowsCanKvaser: WindowsCanKvaserInterface = {
 
     async list(): Promise<AdapterInfo[]> {
-        return asyncListCanDevices();
+        let dongles = asyncListCanDevices();
+        console.log(dongles);
+        return dongles;
     },
 
     async open(options: OpenOptions): Promise<WindowsCanDeviceKvaser> {

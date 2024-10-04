@@ -1,7 +1,6 @@
 #include <cstdio>
 #include <napi.h>
 // #include "../node_modules/node-addon-api/napi.h"
-#include <thread>
 #include <cstring>
 
 #include "CheckForError.h"
@@ -20,7 +19,6 @@ Napi::Array ListCanDevices(const Napi::CallbackInfo &info) {
 
     // Populate the JavaScript array with objects
     for (size_t i = 0; i < adapters.size(); i++) {
-        printf(adapters[i].name.c_str());
         Napi::Object jsAdapter = Napi::Object::New(env);
         jsAdapter.Set("name", Napi::String::New(env, adapters[i].name));
         jsArray.Set(i, jsAdapter);
