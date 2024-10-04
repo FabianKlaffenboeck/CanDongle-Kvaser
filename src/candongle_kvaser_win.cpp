@@ -3,42 +3,32 @@
 // #include "../node_modules/node-addon-api/napi.h"
 #include <thread>
 #include <cstring>
+
+#include "CheckForError.h"
+#include "ListCanChannels.h"
 #include "Canlib/INC/canlib.h"  // Include your CAN library headers here
 
+struct AdapterInfo;
 Napi::ThreadSafeFunction tsfn;
-
-// Helper function for error checking
-void CheckForError(const char *cmd, canStatus stat) {
-    if (stat != canOK) {
-        char buf[255];
-        canGetErrorText(stat, buf, sizeof(buf));
-        printf("[%s] %s: failed, stat=%d\n", cmd, buf, (int) stat);
-        abort();
-    }
-}
 
 // Function to list all CAN devices
 Napi::Array ListCanDevices(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    int number_of_channels;
-    canStatus stat = canGetNumberOfChannels(&number_of_channels);
-    CheckForError("canGetNumberOfChannels", stat);
+    // Call the native C++ function to get the list of channels
+    std::vector<AdapterInfo> adapters = ListChannels();
 
-    Napi::Array devices = Napi::Array::New(env, number_of_channels);
+    // Create a JavaScript array to hold the result
+    Napi::Array jsArray = Napi::Array::New(env, adapters.size());
 
-    for (int i = 0; i < number_of_channels; i++) {
-        char device_name[255];
-        stat = canGetChannelData(i, canCHANNELDATA_DEVDESCR_ASCII, device_name, sizeof(device_name));
-        CheckForError("canGetChannelData", stat);
-
-        Napi::Object adapterInfo = Napi::Object::New(env);
-        adapterInfo.Set("name", Napi::String::New(env, device_name));
-
-        devices[i] = adapterInfo;
+    // Populate the JavaScript array with objects
+    for (size_t i = 0; i < adapters.size(); i++) {
+        Napi::Object jsAdapter = Napi::Object::New(env);
+        jsAdapter.Set("name", Napi::String::New(env, adapters[i].name));
+        jsArray.Set(i, jsAdapter);
     }
 
-    return devices;
+    return jsArray; // Return the array of adapter info objects
 }
 
 // Function to open a CAN channel
