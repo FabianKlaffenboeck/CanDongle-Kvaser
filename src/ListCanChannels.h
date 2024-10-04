@@ -26,7 +26,7 @@ std::vector<AdapterInfo> ListChannels() {
         printf("Found %d channels\n", number_of_channels);
     } else {
         printf("Could not find any CAN interface.\n");
-        return adapters;  // Return an empty list if no channels found
+        return adapters; // Return an empty list if no channels found
     }
 
     // Loop and print all channels
