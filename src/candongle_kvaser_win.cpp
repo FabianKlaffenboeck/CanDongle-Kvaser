@@ -7,24 +7,23 @@
 #include "ListCanChannels.h"
 #include "Canlib/INC/canlib.h"  // Include your CAN library headers here
 
-// Function to list all CAN devices
-Napi::Array ListCanDevices(const Napi::CallbackInfo &info) {
+// N-API method that starts the async worker
+Napi::Value ListCanDevices(const Napi::CallbackInfo& info) {
     Napi::Env env = info.Env();
 
-    // Call the native C++ function to get the list of channels
-    std::vector<AdapterInfo> adapters = ListChannels();
-
-    // Create a JavaScript array to hold the result
-    Napi::Array jsArray = Napi::Array::New(env, adapters.size());
-
-    // Populate the JavaScript array with objects
-    for (size_t i = 0; i < adapters.size(); i++) {
-        Napi::Object jsAdapter = Napi::Object::New(env);
-        jsAdapter.Set("name", Napi::String::New(env, adapters[i].name));
-        jsArray.Set(i, jsAdapter);
+    // Check if the callback function is provided
+    if (info.Length() < 1 || !info[0].IsFunction()) {
+        Napi::TypeError::New(env, "Callback function expected").ThrowAsJavaScriptException();
+        return env.Null();
     }
 
-    return jsArray; // Return the array of adapter info objects
+    Napi::Function callback = info[0].As<Napi::Function>();
+
+    // Create a new instance of the worker and queue it for execution
+    ListCanDevicesWorker* worker = new ListCanDevicesWorker(callback);
+    worker->Queue();  // Queue the worker for asynchronous execution
+
+    return env.Undefined();  // Return undefined immediately (async)
 }
 
 // Initialize the addon
