@@ -5,6 +5,7 @@
 #ifndef LISTCANCHANNELS_H
 #define LISTCANCHANNELS_H
 #include <cstdio>
+#include <sstream>
 #include <vector>
 
 #include "CheckForError.h"
@@ -14,10 +15,14 @@
 // C++ Function to list CAN channels and return a vector of AdapterInfo
 std::vector<AdapterInfo> ListChannels() {
     std::vector<AdapterInfo> adapters;
+
+    canStatus stat;
     int number_of_channels;
+    int device_channel;
+    char device_name[255];
 
     // Get number of channels
-    canStatus stat = canGetNumberOfChannels(&number_of_channels);
+    stat = canGetNumberOfChannels(&number_of_channels);
     CheckForError("canGetNumberOfChannels", stat);
 
     if (number_of_channels > 0) {
@@ -27,15 +32,17 @@ std::vector<AdapterInfo> ListChannels() {
         return adapters; // Return an empty list if no channels found
     }
 
-    // Loop and print all channels
     for (int i = 0; i < number_of_channels; i++) {
-        char device_name[255];
         stat = canGetChannelData(i, canCHANNELDATA_DEVDESCR_ASCII, device_name, sizeof(device_name));
-        CheckForError("canGetChannelData", stat);
+        CheckForError((char *) "canGetChannelData", stat);
+        stat = canGetChannelData(i, canCHANNELDATA_CHAN_NO_ON_CARD, &device_channel, sizeof(device_channel));
+        CheckForError((char *) "canGetChannelData", stat);
+        printf("%s %d %s %d\n", "Found channel:", i, device_name, (device_channel + 1));
 
-        // Add the channel info to the list of adapters
+        std::stringstream ss;
+        ss << "Found channel: " << i << " " << device_name << " " << (device_channel + 1);
         AdapterInfo info;
-        info.name = std::string(device_name);
+        info.name = std::string(ss.str());
         adapters.push_back(info);
     }
 
