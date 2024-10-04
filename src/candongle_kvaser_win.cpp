@@ -1,6 +1,6 @@
 #include <cstdio>
-// #include <napi.h>
-#include "../node_modules/node-addon-api/napi.h"
+#include <napi.h>
+// #include "../node_modules/node-addon-api/napi.h"
 #include <thread>
 #include <cstring>
 
