@@ -173,6 +173,7 @@ Napi::Value SetMessageCallback(const Napi::CallbackInfo &info) {
 
 // Initialize the addon
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
+    canInitializeLibrary();
     exports.Set("listCanDevices", Napi::Function::New(env, ListCanDevices));
     exports.Set("openCanChannel", Napi::Function::New(env, OpenCanChannel));
     exports.Set("closeCanChannel", Napi::Function::New(env, CloseCanChannel));
