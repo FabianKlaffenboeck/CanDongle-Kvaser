@@ -14,12 +14,10 @@
 // C++ Function to list CAN channels and return a vector of AdapterInfo
 std::vector<AdapterInfo> ListChannels() {
     std::vector<AdapterInfo> adapters;
-    canStatus stat;
     int number_of_channels;
-    char device_name[255];
 
     // Get number of channels
-    stat = canGetNumberOfChannels(&number_of_channels);
+    canStatus stat = canGetNumberOfChannels(&number_of_channels);
     CheckForError("canGetNumberOfChannels", stat);
 
     if (number_of_channels > 0) {
@@ -31,6 +29,7 @@ std::vector<AdapterInfo> ListChannels() {
 
     // Loop and print all channels
     for (int i = 0; i < number_of_channels; i++) {
+        char device_name[255];
         stat = canGetChannelData(i, canCHANNELDATA_DEVDESCR_ASCII, device_name, sizeof(device_name));
         CheckForError("canGetChannelData", stat);
 
