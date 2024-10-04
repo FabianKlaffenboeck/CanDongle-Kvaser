@@ -8,22 +8,20 @@
 #include "Canlib/INC/canlib.h"  // Include your CAN library headers here
 
 // N-API method that starts the async worker
-Napi::Value ListCanDevices(const Napi::CallbackInfo& info) {
+Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    // Check if the callback function is provided
     if (info.Length() < 1 || !info[0].IsFunction()) {
         Napi::TypeError::New(env, "Callback function expected").ThrowAsJavaScriptException();
         return env.Null();
     }
 
-    Napi::Function callback = info[0].As<Napi::Function>();
+    auto callback = info[0].As<Napi::Function>();
 
-    // Create a new instance of the worker and queue it for execution
-    ListCanDevicesWorker* worker = new ListCanDevicesWorker(callback);
-    worker->Queue();  // Queue the worker for asynchronous execution
+    auto *worker = new ListCanDevicesWorker(callback);
+    worker->Queue();
 
-    return env.Undefined();  // Return undefined immediately (async)
+    return env.Undefined();
 }
 
 // Initialize the addon

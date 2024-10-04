@@ -9,7 +9,7 @@
 #include <vector>
 
 #include "CheckForError.h"
-#include "interfaces.h"
+#include "Interfaces.h"
 #include "Canlib/INC/canlib.h"
 
 std::vector<AdapterInfo> ListChannels() {
@@ -21,14 +21,12 @@ std::vector<AdapterInfo> ListChannels() {
     canStatus stat = canGetNumberOfChannels(&number_of_channels);
     CheckForError("canGetNumberOfChannels", stat);
 
-    if (number_of_channels > 0) {
-        printf("Found %d channels\n", number_of_channels);
-    } else {
+    if (number_of_channels <= 0) {
         printf("Could not find any CAN interface.\n");
-        return adapters; // Return an empty list if no channels found
+        return adapters;
     }
+    // printf("Found %d channels\n", number_of_channels);
 
-    // Loop through and gather channel information
     for (int i = 0; i < number_of_channels; i++) {
         char device_name[255];
         stat = canGetChannelData(i, canCHANNELDATA_DEVDESCR_ASCII, device_name, sizeof(device_name));
@@ -37,24 +35,21 @@ std::vector<AdapterInfo> ListChannels() {
         stat = canGetChannelData(i, canCHANNELDATA_CHAN_NO_ON_CARD, &device_channel, sizeof(device_channel));
         CheckForError("canGetChannelData", stat);
 
-        // Use std::stringstream to build the formatted string
         std::stringstream ss;
         ss << "Found channel: " << i << " " << device_name << " " << (device_channel + 1);
 
-        // Add the channel info and formatted string to the list of adapters
         AdapterInfo info;
         info.name = std::string(device_name); // Channel name
-        info.name = ss.str(); // Formatted description
+        info.name = ss.str();
         adapters.push_back(info);
     }
 
     return adapters;
 }
 
-// Define an AsyncWorker to run the ListChannels function
-class ListCanDevicesWorker : public Napi::AsyncWorker {
+class ListCanDevicesWorker final : public Napi::AsyncWorker {
 public:
-    ListCanDevicesWorker(Napi::Function &callback): Napi::AsyncWorker(callback) {
+    explicit ListCanDevicesWorker(const Napi::Function &callback): Napi::AsyncWorker(callback) {
     }
 
     void Execute() override {
@@ -82,7 +77,7 @@ public:
 
     // This code will be executed if there was an error in Execute
     void OnError(const Napi::Error &e) override {
-        Napi::Env env = Env();
+        const Napi::Env env = Env();
         Napi::HandleScope scope(env);
         Callback().Call({e.Value()});
     }
