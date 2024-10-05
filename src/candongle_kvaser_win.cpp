@@ -27,23 +27,20 @@ Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
 Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    if (info.Length() != 2 || !info[0].IsString() || !info[1].IsNumber()) {
-        Napi::TypeError::New(env, "Expected channel (string) and baudRate (number)").ThrowAsJavaScriptException();
+    if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
+        Napi::TypeError::New(env, "Expected id (number) and baudRate (number)").ThrowAsJavaScriptException();
         return env.Null();
     }
 
-    // Extract parameters from JavaScript
-    std::string channel = info[0].As<Napi::String>().Utf8Value();
-    int baudRate = info[1].As<Napi::Number>().Int32Value();
+    const int channel = info[0].As<Napi::Number>().Int32Value();
+    const int baudRate = info[1].As<Napi::Number>().Int32Value();
 
-    // Open the CAN channel and get a handle (using your C++ CAN API)
-    canHandle handle = openCanChannel(std::stoi(channel), baudRate);
+    const canHandle handle = openCanChannel(channel, baudRate);
     if (handle < 0) {
         Napi::Error::New(env, "Failed to open CAN channel").ThrowAsJavaScriptException();
         return env.Null();
     }
 
-    // Create a new CanDevice instance using the handle
     Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
 
     return canDeviceInstance;
