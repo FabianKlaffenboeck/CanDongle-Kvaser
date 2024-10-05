@@ -27,15 +27,28 @@ Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
 Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
+    std::cout << "Number of arguments: " << info.Length() << std::endl;
+
+    // Check if you received the correct number of arguments
+    if (info.Length() != 2) {
+        Napi::TypeError::New(env, "Expected exactly 2 arguments: channel (string) and baudRate (number)").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    // Log argument types to debug if the correct types are passed
+    std::cout << "Argument 1 (Channel): Type - " << info[0].Type() << std::endl;
+    std::cout << "Argument 2 (BaudRate): Type - " << info[1].Type() << std::endl;
+
+
     if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
         Napi::TypeError::New(env, "Expected id (number) and baudRate (number)").ThrowAsJavaScriptException();
         return env.Null();
     }
 
-    const int channel = info[0].As<Napi::Number>().Int32Value();
+    const int id = info[0].As<Napi::Number>().Int32Value();
     const int baudRate = info[1].As<Napi::Number>().Int32Value();
 
-    const canHandle handle = openCanChannel(channel, baudRate);
+    const canHandle handle = openCanChannel(id, baudRate);
     if (handle < 0) {
         Napi::Error::New(env, "Failed to open CAN channel").ThrowAsJavaScriptException();
         return env.Null();
