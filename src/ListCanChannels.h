@@ -4,13 +4,12 @@
 
 #ifndef LISTCANCHANNELS_H
 #define LISTCANCHANNELS_H
+
 #include <cstdio>
 #include <sstream>
 #include <vector>
-#include "../Canlib/INC/canlib.h"
-#include "../CheckForError.h"
-#include "../Interfaces.h"
-
+#include "CheckForError.h"
+#include "Interfaces.h"
 
 std::vector<AdapterInfo> ListChannels() {
     std::vector<AdapterInfo> adapters;
