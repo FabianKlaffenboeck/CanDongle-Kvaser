@@ -35,8 +35,11 @@ std::vector<AdapterInfo> ListChannels() {
         stat = canGetChannelData(i, canCHANNELDATA_CHAN_NO_ON_CARD, &device_channel, sizeof(device_channel));
         CheckForError("canGetChannelData", stat);
 
+        std::stringstream ss;
+        ss << "Found channel: " << i << " " << device_name << " " << (device_channel + 1);
+
         AdapterInfo info;
-        info.name = std::string(device_name);
+        info.name = std::string(ss.str());
         adapters.push_back(info);
     }
 
