@@ -17,7 +17,7 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
         return asyncListCanDevices();
     },
     async open(options: OpenOptions): Promise<WindowsCanDeviceKvaser> {
-        const handle = await asyncOpenCanChannel(options.path, options.baudRate);
+        const handle = await asyncOpenCanChannel(options.id, options.baudRate);
         return new WindowsCanDeviceKvaser(handle);
     }
 }
