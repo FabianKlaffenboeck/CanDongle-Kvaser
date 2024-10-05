@@ -36,37 +36,5 @@ canHandle openCanChannel(int channel, int bitrate) {
     return hnd; // Return the handle if everything was successful
 }
 
-// Define a worker for opening the CAN channel asynchronously
-class OpenCanChannelWorker : public Napi::AsyncWorker {
-public:
-    OpenCanChannelWorker(Napi::Function &callback, const std::string &path, int baudRate): Napi::AsyncWorker(callback),
-        path(path), baudRate(baudRate) {
-    }
-
-    void Execute() override {
-        // Open the CAN channel here
-
-        handle = openCanChannel(std::stoi(path), baudRate);
-        if (handle < 0) {
-            SetError("Failed to open CAN channel");
-        }
-    }
-
-    void OnOK() override {
-        // Call the callback with the result (the handle, if needed)
-        Callback().Call({Env().Null(), Napi::Number::New(Env(), handle)});
-    }
-
-    void OnError(const Napi::Error &e) override {
-        // If there's an error, return it in the callback
-        Callback().Call({Napi::String::New(Env(), e.Message()), Env().Null()});
-    }
-
-private:
-    std::string path;
-    int baudRate;
-    int handle; // Store the handle for the CAN channel
-};
-
 
 #endif //OPENCANCHANNE_H

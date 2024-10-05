@@ -1,6 +1,6 @@
 #include <cstdio>
-#include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
+// #include <napi.h>
+#include "../node_modules/node-addon-api/napi.h"
 #include <cstring>
 
 #include "ListCanChannels.h"
@@ -42,10 +42,10 @@ Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
         Napi::TypeError::New(env, "Failed to open CAN channel").ThrowAsJavaScriptException();
         return env.Null();
     }
-
-    // Create a new CanDevice instance using the handle
-    Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
-    return canDeviceInstance; // Return the new CanDevice object
+printf("openCanChannel returned %d\n", handle);
+    // Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
+    return env.Null();
+    // return canDeviceInstance;
 }
 
 

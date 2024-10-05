@@ -40,8 +40,7 @@ Napi::Object CanDevice::NewInstance(int handle, Napi::Env env) {
 
 
 // Constructor implementation
-CanDevice::CanDevice(const Napi::CallbackInfo &info)
-    : Napi::ObjectWrap<CanDevice>(info), handle(-1), isOpen(false), messageCallback(nullptr) {
+CanDevice::CanDevice(const Napi::CallbackInfo &info): Napi::ObjectWrap<CanDevice>(info), handle(-1), isOpen(false), messageCallback(nullptr) {
     if (info.Length() > 0 && info[0].IsNumber()) {
         handle = info[0].As<Napi::Number>().Int32Value();
         isOpen = true; // Set isOpen to true as we have a valid handle
