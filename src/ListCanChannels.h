@@ -36,7 +36,7 @@ std::vector<AdapterInfo> ListChannels() {
         CheckForError("canGetChannelData", stat);
 
         std::stringstream ss;
-        ss << "Found channel: " << i << " " << device_name << " " << (device_channel + 1);
+        ss << device_name << " " << (device_channel + 1);
 
         AdapterInfo info;
         info.name = std::string(ss.str());
