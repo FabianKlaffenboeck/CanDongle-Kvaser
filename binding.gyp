@@ -21,7 +21,7 @@
             "<(module_root_dir)/src/Canlib/Lib/MS/canlib32.lib"
           ],
           'sources': [
-            'src/*'
+            'src/*.cpp'
           ],
           'msvs_settings': {
             'VCCLCompilerTool': {
