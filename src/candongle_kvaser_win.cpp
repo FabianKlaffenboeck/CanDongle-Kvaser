@@ -27,25 +27,26 @@ Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
 Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    // Check if the correct number of arguments is provided
-    if (info.Length() < 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
-        Napi::TypeError::New(env, "Expected channel number and baud rate").ThrowAsJavaScriptException();
+    if (info.Length() != 2 || !info[0].IsString() || !info[1].IsNumber()) {
+        Napi::TypeError::New(env, "Expected channel (string) and baudRate (number)").ThrowAsJavaScriptException();
         return env.Null();
     }
 
-    int channel = info[0].As<Napi::Number>().Int32Value();
+    // Extract parameters from JavaScript
+    std::string channel = info[0].As<Napi::String>().Utf8Value();
     int baudRate = info[1].As<Napi::Number>().Int32Value();
 
-    // Open the CAN channel and get the handle
-    int handle = openCanChannel(channel, baudRate);
+    // Open the CAN channel and get a handle (using your C++ CAN API)
+    canHandle handle = openCanChannel(std::stoi(channel), baudRate);
     if (handle < 0) {
-        Napi::TypeError::New(env, "Failed to open CAN channel").ThrowAsJavaScriptException();
+        Napi::Error::New(env, "Failed to open CAN channel").ThrowAsJavaScriptException();
         return env.Null();
     }
-printf("openCanChannel returned %d\n", handle);
-    // Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
-    return env.Null();
-    // return canDeviceInstance;
+
+    // Create a new CanDevice instance using the handle
+    Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
+
+    return canDeviceInstance;
 }
 
 
