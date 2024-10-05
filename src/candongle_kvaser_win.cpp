@@ -1,6 +1,6 @@
 #include <cstdio>
-#include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
+// #include <napi.h>
+#include "../node_modules/node-addon-api/napi.h"
 #include <cstring>
 
 #include "ListCanChannels.h"
@@ -28,16 +28,9 @@ Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     std::cout << "Number of arguments: " << info.Length() << std::endl;
-
-    // Check if you received the correct number of arguments
-    if (info.Length() != 2) {
-        Napi::TypeError::New(env, "Expected exactly 2 arguments: channel (string) and baudRate (number)").ThrowAsJavaScriptException();
-        return env.Null();
-    }
-
-    // Log argument types to debug if the correct types are passed
     std::cout << "Argument 1 (Channel): Type - " << info[0].Type() << std::endl;
     std::cout << "Argument 2 (BaudRate): Type - " << info[1].Type() << std::endl;
+    std::cout << "Argument 3 (BaudRate): Type - " << info[2].Type() << std::endl;
 
 
     if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
