@@ -4,8 +4,8 @@
 #include <cstring>
 
 #include "CheckForError.h"
-#include "ListCanChannels.h"
-#include "Canlib/INC/canlib.h"  // Include your CAN library headers here
+#include "Canlib/INC/canlib.h"
+#include "ListCanDevicesWorker/ListCanDevicesWorker.h"
 
 // N-API method that starts the async worker
 Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
