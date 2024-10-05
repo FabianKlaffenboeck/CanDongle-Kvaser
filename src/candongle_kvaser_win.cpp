@@ -3,11 +3,9 @@
 // #include "../node_modules/node-addon-api/napi.h"
 #include <cstring>
 
-#include "CheckForError.h"
 #include "ListCanChannels.h"
-#include "Canlib/INC/canlib.h"  // Include your CAN library headers here
+#include "Canlib/INC/canlib.h"
 
-// N-API method that starts the async worker
 Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
@@ -16,7 +14,7 @@ Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
         return env.Null();
     }
 
-    auto callback = info[0].As<Napi::Function>();
+    const auto callback = info[0].As<Napi::Function>();
 
     auto *worker = new ListCanDevicesWorker(callback);
     worker->Queue();
@@ -24,7 +22,6 @@ Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
     return env.Undefined();
 }
 
-// Initialize the addon
 Napi::Object Init(Napi::Env env, Napi::Object exports) {
     canInitializeLibrary();
     exports.Set("list", Napi::Function::New(env, ListCanDevices));

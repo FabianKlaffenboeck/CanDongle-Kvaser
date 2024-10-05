@@ -4,10 +4,10 @@
 
 #ifndef LISTCANCHANNELS_H
 #define LISTCANCHANNELS_H
+
 #include <cstdio>
 #include <sstream>
 #include <vector>
-
 #include "CheckForError.h"
 #include "Interfaces.h"
 #include "Canlib/INC/canlib.h"
@@ -25,23 +25,24 @@ std::vector<AdapterInfo> ListChannels() {
         printf("Could not find any CAN interface.\n");
         return adapters;
     }
-    // printf("Found %d channels\n", number_of_channels);
+    printf("Found %d channels\n", number_of_channels);
 
     for (int i = 0; i < number_of_channels; i++) {
         char device_name[255];
+
         stat = canGetChannelData(i, canCHANNELDATA_DEVDESCR_ASCII, device_name, sizeof(device_name));
         CheckForError("canGetChannelData", stat);
-
         stat = canGetChannelData(i, canCHANNELDATA_CHAN_NO_ON_CARD, &device_channel, sizeof(device_channel));
         CheckForError("canGetChannelData", stat);
 
         AdapterInfo info;
-        info.name = std::string(device_name); // Channel name
+        info.name = std::string(device_name);
         adapters.push_back(info);
     }
 
     return adapters;
 }
+
 
 class ListCanDevicesWorker final : public Napi::AsyncWorker {
 public:
@@ -63,15 +64,14 @@ public:
         Napi::Array jsArray = Napi::Array::New(env, adapters.size());
 
         for (size_t i = 0; i < adapters.size(); i++) {
-            Napi::Object jsAdapter = Napi::Object::New(env);
-            jsAdapter.Set("name", Napi::String::New(env, adapters[i].name));
-            jsArray.Set(i, jsAdapter);
+            Napi::Object jsAdapters = Napi::Object::New(env);
+            jsAdapters.Set("name", Napi::String::New(env, adapters[i].name));
+            jsArray.Set(i, jsAdapters);
         }
 
         Callback().Call({env.Null(), jsArray});
     }
 
-    // This code will be executed if there was an error in Execute
     void OnError(const Napi::Error &e) override {
         const Napi::Env env = Env();
         Napi::HandleScope scope(env);

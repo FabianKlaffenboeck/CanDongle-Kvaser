@@ -4,7 +4,8 @@ import {
     asyncListCanDevices,
     asyncOpenCanChannel,
     asyncRead,
-    asyncSetMessageCallback, asyncWrite
+    asyncSetMessageCallback,
+    asyncWrite
 } from "./load-bindings";
 
 
@@ -13,9 +14,7 @@ export type WindowsCanKvaserInterface = CanDevicesInterface<WindowsCanDeviceKvas
 export const WindowsCanKvaser: WindowsCanKvaserInterface = {
 
     async list(): Promise<AdapterInfo[]> {
-        let dongles = await asyncListCanDevices();
-        console.log(dongles);
-        return dongles;
+        return asyncListCanDevices();
     },
     async open(options: OpenOptions): Promise<WindowsCanDeviceKvaser> {
         const handle = await asyncOpenCanChannel(options.path, options.baudRate);
