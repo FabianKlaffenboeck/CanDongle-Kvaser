@@ -7,7 +7,7 @@
 #include "Canlib/INC/canlib.h"
 #include "utils.h"
 #include <napi.h>
-#include "../node_modules/node-addon-api/napi.h"
+// #include "../node_modules/node-addon-api/napi.h"
 #include "WriteCanWorker.h"
 
 Napi::Value ListCan(const Napi::CallbackInfo &info) {
