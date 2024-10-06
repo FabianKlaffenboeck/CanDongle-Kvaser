@@ -9,7 +9,7 @@
 #include <string>
 #include "Canlib/INC/canlib.h"
 #include <napi.h>
-#include "../node_modules/node-addon-api/napi.h"
+// #include "../node_modules/node-addon-api/napi.h"
 
 // Function to open a CAN channel, set the bitrate, and go on-bus
 canHandle openCanChannel(int channel, int bitrate) {
