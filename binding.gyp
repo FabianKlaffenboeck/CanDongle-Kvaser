@@ -22,7 +22,6 @@
           ],
           'sources': [
             'src/candongle_kvaser_win.cpp',
-            'src/CanDevice/CanDevice.cpp'
           ],
           'msvs_settings': {
             'VCCLCompilerTool': {

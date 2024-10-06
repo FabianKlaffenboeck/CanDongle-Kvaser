@@ -4,6 +4,8 @@
 
 #ifndef INTERFACES_H
 #define INTERFACES_H
+
+#include <cstdint>
 #include <string>
 
 struct AdapterInfo {

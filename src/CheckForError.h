@@ -4,8 +4,8 @@
 
 #ifndef CHECKFORERROR_H
 #define CHECKFORERROR_H
-#include <cstdio>
 
+#include <cstdio>
 #include "Canlib/INC/canlib.h"
 #include "Canlib/INC/canstat.h"
 

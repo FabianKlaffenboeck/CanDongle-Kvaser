@@ -55,7 +55,9 @@ public:
         Napi::Env env = Env();
         Napi::HandleScope scope(env);
 
-        Callback().Call({env.Null(), path});
+        Napi::Number jspath = Napi::Number::New(env, path);
+
+        Callback().Call({env.Null(), jspath});
     }
 
     void OnError(const Napi::Error &e) override {
