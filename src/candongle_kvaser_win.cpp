@@ -90,10 +90,10 @@ Napi::Value WriteCan(const Napi::CallbackInfo &info) {
         return env.Null();
     }
 
-    int path = info[0].ToNumber().Int32Value();
+    const int path = info[0].ToNumber().Int32Value();
+    auto napiArray = info[1].As<Napi::Array>();
     std::list<CanMessage> messages;
 
-    auto napiArray = info[1].As<Napi::Array>();
     for (uint32_t i = 0; i < napiArray.Length(); ++i) {
         Napi::Value item = napiArray[i];
 
@@ -101,26 +101,28 @@ Napi::Value WriteCan(const Napi::CallbackInfo &info) {
             Napi::TypeError::New(env, "Array elements must be objects").ThrowAsJavaScriptException();
             return env.Null();
         }
+
         auto obj = item.As<Napi::Object>();
 
         CanMessage canMsg{};
-        canMsg.id = getIntFromObject(napiArray, "id");
-        canMsg.dlc = getIntFromObject(napiArray, "dlc");
+        canMsg.id = getIntFromObject(obj, "id");
+        canMsg.dlc = getIntFromObject(obj, "dlc");
 
         auto dataArray = obj.Get("data").As<Napi::Array>();
-        for (unsigned char &j: canMsg.data) {
-            Napi::Value value = dataArray[j];
+
+        for (uint32_t i = 0; i < dataArray.Length(); ++i) {
+            Napi::Value value = dataArray[i];
             if (!value.IsNumber()) {
                 Napi::TypeError::New(env, "`data` array elements must be numbers").ThrowAsJavaScriptException();
                 return env.Null();
             }
-            j = value.As<Napi::Number>().Int32Value();
+            canMsg.data[i] = value.As<Napi::Number>().Int32Value();
         }
 
         messages.push_back(canMsg);
     }
 
-    auto callback = info[2].As<Napi::Function>();
+    const auto callback = info[2].As<Napi::Function>();
     auto *worker = new WriteCanWorker(callback);
     worker->path = path;
     worker->messages = messages;

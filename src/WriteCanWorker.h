@@ -14,19 +14,16 @@
 
 
 void sendCanFrame(canHandle hnd, long id, unsigned char *data, int dataLength) {
-    // Prepare and send the CAN message
+
     canStatus status = canWrite(hnd, id, data, dataLength, canMSG_STD); // Use `canMSG_EXT` for extended frames
     if (status != canOK) {
         std::cerr << "Error: Failed to send CAN frame!" << std::endl;
         return;
     }
 
-    // Wait until the message is sent
-    status = canWriteSync(hnd, 1000); // Wait up to 1000ms
+    status = canWriteSync(hnd, 1000);
     if (status != canOK) {
         std::cerr << "Error: Failed to sync CAN write!" << std::endl;
-    } else {
-        std::cout << "CAN frame sent successfully!" << std::endl;
     }
 }
 
