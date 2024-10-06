@@ -21,10 +21,10 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
         if (!options || typeof options !== 'object' || Array.isArray(options)) {
             throw new TypeError('"options" is not an object')
         }
-        if (options.path != undefined) {
+        if (options.path == undefined) {
             throw new TypeError('"path" is not a valid port')
         }
-        if (options.baudRate != undefined) {
+        if (options.baudRate == undefined) {
             throw new TypeError('"baudRate" is not a valid baudRate')
         }
 
