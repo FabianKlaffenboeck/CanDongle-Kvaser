@@ -54,7 +54,7 @@ Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     }
 
     // Create a new CanDevice instance using the handle
-    Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
+    // Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
 
     // // Check if there is a third argument and it's a function (callback)
     // if (info.Length() > 2 && info[2].IsFunction()) {
