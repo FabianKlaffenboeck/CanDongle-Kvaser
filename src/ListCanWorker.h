@@ -49,9 +49,9 @@ std::vector<AdapterInfo> ListChannels() {
 }
 
 
-class ListCanDevicesWorker final : public Napi::AsyncWorker {
+class ListCanWorker final : public Napi::AsyncWorker {
 public:
-    explicit ListCanDevicesWorker(const Napi::Function &callback): Napi::AsyncWorker(callback) {
+    explicit ListCanWorker(const Napi::Function &callback): Napi::AsyncWorker(callback) {
     }
 
     void Execute() override {

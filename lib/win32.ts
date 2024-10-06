@@ -21,10 +21,10 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
         if (!options || typeof options !== 'object' || Array.isArray(options)) {
             throw new TypeError('"options" is not an object')
         }
-        if (!options.path) {
+        if (options.path != undefined) {
             throw new TypeError('"path" is not a valid port')
         }
-        if (!options.baudRate) {
+        if (options.baudRate != undefined) {
             throw new TypeError('"baudRate" is not a valid baudRate')
         }
 
@@ -92,16 +92,16 @@ export class WindowsCanDeviceKvaser implements CanInterface {
         // }
     }
 
-    async write(buffer: number[]): Promise<void> {
-        // if (!this.isOpen) {
-        //     throw new Error("CAN channel is closed");
-        // }
-        //
-        // try {
-        //     await asyncWrite(this.handle, buffer);
-        // } catch (error) {
-        //     throw new Error(`Failed to write to CAN channel: ${error.message}`);
-        // }
+    async write(buffer: CanMessage[]): Promise<void> {
+        if (!this.isOpen) {
+            throw new Error("CAN channel is closed");
+        }
+
+        try {
+            await asyncWrite(this.handle, buffer);
+        } catch (error) {
+            throw new Error(`Failed to write to CAN channel: ${error.message}`);
+        }
     }
 }
 

@@ -2,8 +2,8 @@
 // Created by FabianKla on 05/10/2024.
 //
 
-#ifndef OPENCANCHANNE_H
-#define OPENCANCHANNE_H
+#ifndef OPENCANWORKER_H
+#define OPENCANWORKER_H
 
 #include <iostream>
 #include <string>
@@ -71,4 +71,4 @@ public:
 };
 
 
-#endif //OPENCANCHANNE_H
+#endif //OPENCANWORKER_H
