@@ -72,8 +72,8 @@ export class WindowsCanDeviceKvaser implements CanInterface {
             const message = await asyncRead(this.handle);
             return {
                 id: message.id,
+                dlc: message.dlc,
                 data: Array.from(message.data), // Convert to regular array for JavaScript compatibility
-                time: message.time,
             };
         } catch (error) {
             throw new Error(`Failed to read from CAN channel: ${error.message}`);
