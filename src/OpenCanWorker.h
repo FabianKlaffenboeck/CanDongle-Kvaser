@@ -9,18 +9,17 @@
 #include <string>
 #include "Canlib/INC/canlib.h"
 #include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
+#include "../node_modules/node-addon-api/napi.h"
 
 // Function to open a CAN channel, set the bitrate, and go on-bus
-canHandle openCanChannel(int channel, int bitrate) {
+canHandle openCanChannel(const int channel, const int bitrate) {
     // Open the CAN channel
-    canHandle hnd = canOpenChannel(channel, canOPEN_ACCEPT_VIRTUAL);
+    const canHandle hnd = canOpenChannel(channel, canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
         std::cerr << "Error: Failed to open CAN channel!" << std::endl;
         return hnd; // Return the error handle
     }
 
-    // Set the bitrate (e.g., 500Kbps)
     canStatus status = canSetBusParams(hnd, bitrate, 0, 0, 0, 0, 0);
     if (status != canOK) {
         std::cerr << "Error: Failed to set CAN bitrate!" << std::endl;

@@ -28,7 +28,7 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
             throw new TypeError('"baudRate" is not a valid baudRate')
         }
 
-        const handle = await asyncOpenCanChannel(options.path, options);
+        const handle = asyncOpenCanChannel(options.path, options);
         return new WindowsCanDeviceKvaser(handle, options);
     }
 }
