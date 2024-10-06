@@ -27,29 +27,44 @@ Napi::Value ListCanDevices(const Napi::CallbackInfo &info) {
 Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    std::cout << "Number of arguments: " << info.Length() << std::endl;
-    std::cout << "Argument 1 (Channel): Type - " << info[0].Type() << std::endl;
-    std::cout << "Argument 2 (BaudRate): Type - " << info[1].Type() << std::endl;
-    std::cout << "Argument 3 (BaudRate): Type - " << info[2].Type() << std::endl;
-
-
-    if (info.Length() != 2 || !info[0].IsNumber() || !info[1].IsNumber()) {
-        Napi::TypeError::New(env, "Expected id (number) and baudRate (number)").ThrowAsJavaScriptException();
+    if (!info[0].IsNumber()) {
+        Napi::TypeError::New(env, "Expected the first argument to be a number (id)").
+                ThrowAsJavaScriptException();
         return env.Null();
     }
 
-    const int id = info[0].As<Napi::Number>().Int32Value();
-    const int baudRate = info[1].As<Napi::Number>().Int32Value();
+    if (!info[1].IsNumber()) {
+        Napi::TypeError::New(env, "Expected the second argument to be a number (baudRate)").
+                ThrowAsJavaScriptException();
+        return env.Null();
+    }
 
-    const canHandle handle = openCanChannel(id, baudRate);
+    int channel = info[0].As<Napi::Number>().Int32Value();
+    int baudRate = info[1].As<Napi::Number>().Int32Value();
+
+    // Log the extracted values for debugging
+    std::cout << "Channel: " << channel << std::endl;
+    std::cout << "BaudRate: " << baudRate << std::endl;
+
+    // Call your CAN API to open the channel
+    canHandle handle = openCanChannel(channel, baudRate); // Convert string channel to integer
     if (handle < 0) {
         Napi::Error::New(env, "Failed to open CAN channel").ThrowAsJavaScriptException();
         return env.Null();
     }
 
+    // Create a new CanDevice instance using the handle
     Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
 
-    return canDeviceInstance;
+    // Check if there is a third argument and it's a function (callback)
+    if (info.Length() > 2 && info[2].IsFunction()) {
+        Napi::Function callback = info[2].As<Napi::Function>();
+
+        // Call the callback with the newly created CanDevice instance
+        callback.Call(env.Global(), {canDeviceInstance});
+    }
+
+    return canDeviceInstance; // Return the instance in case no callback is passed
 }
 
 
