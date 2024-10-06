@@ -1,6 +1,6 @@
 {
   "name": "@fklab/candongle-kvaser",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "scripts": {
@@ -21,7 +21,7 @@
     "hardware"
   ],
   "dependencies": {
-    "@fklab/candongle-interface": "0.0.3",
+    "@fklab/candongle-interface": "0.0.4",
     "cmake-js": "^7.3.0",
     "debug": "4.3.5",
     "node-addon-api": "8.1.0",
