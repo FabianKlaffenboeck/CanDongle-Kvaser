@@ -1,6 +1,6 @@
 #include <cstdio>
 #include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
+#include "../node_modules/node-addon-api/napi.h"
 #include <cstring>
 
 #include "ListCanChannels.h"
@@ -56,13 +56,13 @@ Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     // Create a new CanDevice instance using the handle
     Napi::Object canDeviceInstance = CanDevice::NewInstance(handle, env);
 
-    // Check if there is a third argument and it's a function (callback)
-    if (info.Length() > 2 && info[2].IsFunction()) {
-        Napi::Function callback = info[2].As<Napi::Function>();
-
-        // Call the callback with the newly created CanDevice instance
-        callback.Call(env.Global(), {canDeviceInstance});
-    }
+    // // Check if there is a third argument and it's a function (callback)
+    // if (info.Length() > 2 && info[2].IsFunction()) {
+    //     Napi::Function callback = info[2].As<Napi::Function>();
+    //
+    //     // Call the callback with the newly created CanDevice instance
+    //     callback.Call(env.Global(), {canDeviceInstance});
+    // }
 
     return canDeviceInstance; // Return the instance in case no callback is passed
 }
