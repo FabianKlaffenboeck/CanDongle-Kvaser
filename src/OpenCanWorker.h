@@ -9,7 +9,7 @@
 #include <string>
 #include "Canlib/INC/canlib.h"
 #include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
+#include "../node_modules/node-addon-api/napi.h"
 
 // Function to open a CAN channel, set the bitrate, and go on-bus
 canHandle openCanChannel(int channel, int bitrate) {
@@ -45,7 +45,7 @@ public:
 
     void Execute() override {
         try {
-            openCanChannel(path, baudRate);
+           handle = openCanChannel(path, baudRate);
         } catch (const std::exception &e) {
             SetError(e.what());
         }
@@ -54,10 +54,7 @@ public:
     void OnOK() override {
         Napi::Env env = Env();
         Napi::HandleScope scope(env);
-
-        Napi::Number jspath = Napi::Number::New(env, path);
-
-        Callback().Call({env.Null(), jspath});
+        Callback().Call({env.Null(), Napi::Number::New(env, handle)});
     }
 
     void OnError(const Napi::Error &e) override {
@@ -67,6 +64,7 @@ public:
     }
 
     int path;
+    int handle;
     int baudRate;
 };
 
