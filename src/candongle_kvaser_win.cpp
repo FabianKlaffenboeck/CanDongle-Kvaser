@@ -64,7 +64,7 @@ Napi::Value OpenCanChannel(const Napi::CallbackInfo &info) {
     //     callback.Call(env.Global(), {canDeviceInstance});
     // }
 
-    return canDeviceInstance; // Return the instance in case no callback is passed
+    return env.Undefined(); // Return the instance in case no callback is passed
 }
 
 
