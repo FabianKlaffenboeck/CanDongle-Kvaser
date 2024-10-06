@@ -6,8 +6,10 @@
 #define OPENCANCHANNE_H
 
 #include <iostream>
-#include <napi.h>
 #include <string>
+#include "Canlib/INC/canlib.h"
+#include <napi.h>
+// #include "../node_modules/node-addon-api/napi.h"
 
 // Function to open a CAN channel, set the bitrate, and go on-bus
 canHandle openCanChannel(int channel, int bitrate) {
@@ -35,6 +37,36 @@ canHandle openCanChannel(int channel, int bitrate) {
     }
     return hnd; // Return the handle if everything was successful
 }
+
+class OpenCanWorker final : public Napi::AsyncWorker {
+public:
+    explicit OpenCanWorker(const Napi::Function &callback): Napi::AsyncWorker(callback) {
+    }
+
+    void Execute() override {
+        try {
+            openCanChannel(path, baudRate);
+        } catch (const std::exception &e) {
+            SetError(e.what());
+        }
+    }
+
+    void OnOK() override {
+        Napi::Env env = Env();
+        Napi::HandleScope scope(env);
+
+        Callback().Call({env.Null(), path});
+    }
+
+    void OnError(const Napi::Error &e) override {
+        const Napi::Env env = Env();
+        Napi::HandleScope scope(env);
+        Callback().Call({e.Value()});
+    }
+
+    int path;
+    int baudRate;
+};
 
 
 #endif //OPENCANCHANNE_H

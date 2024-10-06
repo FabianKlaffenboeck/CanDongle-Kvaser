@@ -17,8 +17,19 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
         return asyncListCanDevices();
     },
     async open(options: OpenOptions): Promise<WindowsCanDeviceKvaser> {
-        const handle = await asyncOpenCanChannel(options.id, options.baudRate);
-        return new WindowsCanDeviceKvaser(handle);
+
+        if (!options || typeof options !== 'object' || Array.isArray(options)) {
+            throw new TypeError('"options" is not an object')
+        }
+        if (!options.path) {
+            throw new TypeError('"path" is not a valid port')
+        }
+        if (!options.baudRate) {
+            throw new TypeError('"baudRate" is not a valid baudRate')
+        }
+
+        const handle = await asyncOpenCanChannel(options.path, options);
+        return new WindowsCanDeviceKvaser(handle, options);
     }
 }
 
@@ -27,25 +38,29 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
  * The Windows binding layer
  */
 export class WindowsCanDeviceKvaser implements CanInterface {
-    private handle: number;  // Handle for the CAN channel
-    public isOpen: boolean;   // Flag to indicate if the channel is open
+    private handle: null | number;  // Handle for the CAN channel
+    public openOptions: Required<OpenOptions>
 
-    constructor(handle: number) {
+    constructor(handle: number, options: Required<OpenOptions>) {
         this.handle = handle;
-        this.isOpen = true; // Mark channel as open upon creation
+        this.openOptions = options
+    }
+
+    get isOpen() {
+        return this.handle !== null
     }
 
     async close(): Promise<void> {
-        if (!this.isOpen) {
-            throw new Error("CAN channel is already closed");
-        }
-
-        try {
-            await asyncClose(this.handle);
-            this.isOpen = false; // Update state after closing
-        } catch (error) {
-            throw new Error(`Failed to close CAN channel: ${error.message}`);
-        }
+        // if (!this.isOpen) {
+        //     throw new Error("CAN channel is already closed");
+        // }
+        //
+        // try {
+        //     await asyncClose(this.handle);
+        //     this.isOpen = false; // Update state after closing
+        // } catch (error) {
+        //     throw new Error(`Failed to close CAN channel: ${error.message}`);
+        // }
     }
 
     async read(): Promise<CanMessage> {
@@ -66,27 +81,27 @@ export class WindowsCanDeviceKvaser implements CanInterface {
     }
 
     setMessageCallback(callback: (id: number, data: number[], length: number) => void): void {
-        if (!this.isOpen) {
-            throw new Error("CAN channel is closed");
-        }
-
-        try {
-            asyncSetMessageCallback(this.handle, callback);
-        } catch (error) {
-            throw new Error(`Failed to set message callback: ${error.message}`);
-        }
+        // if (!this.isOpen) {
+        //     throw new Error("CAN channel is closed");
+        // }
+        //
+        // try {
+        //     asyncSetMessageCallback(this.handle, callback);
+        // } catch (error) {
+        //     throw new Error(`Failed to set message callback: ${error.message}`);
+        // }
     }
 
     async write(buffer: number[]): Promise<void> {
-        if (!this.isOpen) {
-            throw new Error("CAN channel is closed");
-        }
-
-        try {
-            await asyncWrite(this.handle, buffer);
-        } catch (error) {
-            throw new Error(`Failed to write to CAN channel: ${error.message}`);
-        }
+        // if (!this.isOpen) {
+        //     throw new Error("CAN channel is closed");
+        // }
+        //
+        // try {
+        //     await asyncWrite(this.handle, buffer);
+        // } catch (error) {
+        //     throw new Error(`Failed to write to CAN channel: ${error.message}`);
+        // }
     }
 }
 
