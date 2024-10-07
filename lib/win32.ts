@@ -28,8 +28,13 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
             throw new TypeError('"baudRate" is not a valid baudRate')
         }
 
-        const handle = asyncOpenCanChannel(options.path, options);
-        return new WindowsCanDeviceKvaser(handle, options);
+        try {
+            const handle = await asyncOpenCanChannel(options.path, options);
+            return new WindowsCanDeviceKvaser(handle, options);
+        } catch (error) {
+            console.error('Error while opening CAN channel:', error);
+            throw error;
+        }
     }
 }
 
@@ -38,7 +43,7 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
  * The Windows binding layer
  */
 export class WindowsCanDeviceKvaser implements CanInterface {
-    private handle: null | number;  // Handle for the CAN channel
+    private readonly handle: null | number;  // Handle for the CAN channel
     public openOptions: Required<OpenOptions>
 
     constructor(handle: number, options: Required<OpenOptions>) {
@@ -51,18 +56,9 @@ export class WindowsCanDeviceKvaser implements CanInterface {
     }
 
     async close(): Promise<void> {
-        // if (!this.isOpen) {
-        //     throw new Error("CAN channel is already closed");
-        // }
-        //
-        // try {
-        //     await asyncClose(this.handle);
-        //     this.isOpen = false; // Update state after closing
-        // } catch (error) {
-        //     throw new Error(`Failed to close CAN channel: ${error.message}`);
-        // }
     }
 
+    // TODO Implement
     async read(): Promise<CanMessage> {
         if (!this.isOpen) {
             throw new Error("CAN channel is closed");
@@ -80,16 +76,8 @@ export class WindowsCanDeviceKvaser implements CanInterface {
         }
     }
 
+    // TODO Implement
     setMessageCallback(callback: (id: number, data: number[], length: number) => void): void {
-        // if (!this.isOpen) {
-        //     throw new Error("CAN channel is closed");
-        // }
-        //
-        // try {
-        //     asyncSetMessageCallback(this.handle, callback);
-        // } catch (error) {
-        //     throw new Error(`Failed to set message callback: ${error.message}`);
-        // }
     }
 
     async write(buffer: CanMessage[]): Promise<void> {

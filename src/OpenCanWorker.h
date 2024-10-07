@@ -11,20 +11,18 @@
 #include <napi.h>
 // #include "../node_modules/node-addon-api/napi.h"
 
-// Function to open a CAN channel, set the bitrate, and go on-bus
 canHandle openCanChannel(const int channel, const int bitrate) {
-    // Open the CAN channel
     const canHandle hnd = canOpenChannel(channel, canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
         std::cerr << "Error: Failed to open CAN channel!" << std::endl;
-        return hnd; // Return the error handle
+        return hnd;
     }
 
     canStatus status = canSetBusParams(hnd, bitrate, 0, 0, 0, 0, 0);
     if (status != canOK) {
         std::cerr << "Error: Failed to set CAN bitrate!" << std::endl;
         canClose(hnd);
-        return -1; // Return error code
+        return -1;
     }
 
     // Go on-bus to start communication
@@ -32,9 +30,9 @@ canHandle openCanChannel(const int channel, const int bitrate) {
     if (status != canOK) {
         std::cerr << "Error: Failed to go on-bus!" << std::endl;
         canClose(hnd);
-        return -1; // Return error code
+        return -1;
     }
-    return hnd; // Return the handle if everything was successful
+    return hnd;
 }
 
 class OpenCanWorker final : public Napi::AsyncWorker {
@@ -45,6 +43,9 @@ public:
     void Execute() override {
         try {
            handle = openCanChannel(path, baudRate);
+           if(handle == -1){
+             SetError("Somethink didn`t worke");
+           }
         } catch (const std::exception &e) {
             SetError(e.what());
         }
@@ -62,9 +63,9 @@ public:
         Callback().Call({e.Value()});
     }
 
-    int path;
-    int handle;
-    int baudRate;
+    int path = -1;
+    int handle = -1;
+    int baudRate = -1;
 };
 
 

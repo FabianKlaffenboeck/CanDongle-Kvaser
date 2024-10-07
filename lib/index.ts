@@ -28,4 +28,3 @@ export function autoDetect(): AutoDetectTypes {
             return WindowsCanKvaser
     }
 }
-

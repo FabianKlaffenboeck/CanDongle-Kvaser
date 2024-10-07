@@ -33,21 +33,23 @@ Napi::Value OpenCan(const Napi::CallbackInfo &info) {
         Napi::TypeError::New(env, "First argument must be a number").ThrowAsJavaScriptException();
         return env.Null();
     }
-    int path = info[0].ToNumber().Int32Value();
 
     if (!info[1].IsObject()) {
         Napi::TypeError::New(env, "Second argument must be an object").ThrowAsJavaScriptException();
         return env.Null();
     }
-    Napi::Object options = info[1].ToObject();
 
     if (!info[2].IsFunction()) {
         Napi::TypeError::New(env, "Third argument must be a function").ThrowAsJavaScriptException();
         return env.Null();
     }
 
+    int path = info[0].ToNumber().Int32Value();
+    Napi::Object options = info[1].ToObject();
     auto callback = info[2].As<Napi::Function>();
+
     auto worker = new OpenCanWorker(callback);
+
     worker->path = path;
     worker->baudRate = getIntFromObject(options, "baudRate");
 
@@ -56,18 +58,21 @@ Napi::Value OpenCan(const Napi::CallbackInfo &info) {
     return env.Undefined(); // Return the instance in case no callback is passed
 }
 
+// TODO Implement
 Napi::Value CloseCan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return env.Undefined(); // Return the instance in case no callback is passed
 }
 
+// TODO Implement
 Napi::Value ReadCan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
     return env.Undefined(); // Return the instance in case no callback is passed
 }
 
+// TODO Implement
 Napi::Value SetCallBackCan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
