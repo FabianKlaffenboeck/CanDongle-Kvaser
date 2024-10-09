@@ -7,7 +7,7 @@
 
 #include "../Canlib/INC/canlib.h"
 #include <napi.h>
-#include "../../node_modules/node-addon-api/napi.h"
+#include <thread>
 
 Napi::ThreadSafeFunction tsfn;
 
@@ -32,6 +32,8 @@ void startCanListener(canHandle hnd) {
         } else if (status != canERR_NOMSG) {
             std::cerr << "Error: Failed to read CAN message!" << std::endl;
         }
+
+        // std::this_thread::sleep_for(std::chrono::milliseconds(10));
     }
 }
 
