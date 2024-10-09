@@ -6,13 +6,13 @@
 #include "WinWorkers/OpenCanWorker.h"
 #include "WinWorkers/WriteCanWorker.h"
 #include "WinWorkers/CloseCanWorker.h"
+#include "WinWorkers/ListenCan.h"
 
 #include "utils.h"
 #include <thread>
 
 #include <napi.h>
 // #include "../node_modules/node-addon-api/napi.h"
-#include "WinWorkers/ListenCan.h"
 
 
 Napi::Value ListCan(const Napi::CallbackInfo &info) {
@@ -87,12 +87,12 @@ Napi::Value SetCallBackCan(const Napi::CallbackInfo &info) {
         return env.Null();
     }
 
-    if (!info[0].IsFunction()) {
-        Napi::TypeError::New(env, "Expected a function as the first argument").ThrowAsJavaScriptException();
+    if (!info[1].IsFunction()) {
+        Napi::TypeError::New(env, "Expected a function as the second argument").ThrowAsJavaScriptException();
         return env.Null();
     }
 
-    auto jsCallback = info[0].As<Napi::Function>();
+    auto jsCallback = info[1].As<Napi::Function>();
 
     tsfn = Napi::ThreadSafeFunction::New(env, jsCallback, "CAN Listener", 0, 1);
     std::thread listenerThread(startCanListener, info[0].ToNumber().Int32Value());
