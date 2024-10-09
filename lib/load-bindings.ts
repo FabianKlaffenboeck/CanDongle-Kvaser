@@ -15,9 +15,6 @@ export const asyncOpenCanChannel = binding.open ? promisify(binding.open) : asyn
 export const asyncClose = binding.close ? promisify(binding.close) : async () => {
     throw new Error('"binding.close " Method not implemented')
 }
-export const asyncRead = binding.read ? promisify(binding.read) : async () => {
-    throw new Error('"binding.read " Method not implemented')
-}
 export const asyncSetMessageCallback = binding.setMessageCallback ? promisify(binding.setMessageCallback) : async () => {
     throw new Error('"binding.setMessageCallback " Method not implemented')
 }

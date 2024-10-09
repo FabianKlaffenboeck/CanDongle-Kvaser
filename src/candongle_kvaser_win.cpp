@@ -2,13 +2,18 @@
 #include <cstring>
 #include <list>
 
-#include "ListCanWorker.h"
-#include "OpenCanWorker.h"
-#include "Canlib/INC/canlib.h"
+#include "WinWorkers/ListCanWorker.h"
+#include "WinWorkers/OpenCanWorker.h"
+#include "WinWorkers/WriteCanWorker.h"
+#include "WinWorkers/CloseCanWorker.h"
+
 #include "utils.h"
+#include <thread>
+
 #include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
-#include "WriteCanWorker.h"
+#include "../node_modules/node-addon-api/napi.h"
+#include "WinWorkers/ListenCan.h"
+
 
 Napi::Value ListCan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
@@ -44,39 +49,56 @@ Napi::Value OpenCan(const Napi::CallbackInfo &info) {
         return env.Null();
     }
 
-    int path = info[0].ToNumber().Int32Value();
-    Napi::Object options = info[1].ToObject();
-    auto callback = info[2].As<Napi::Function>();
-
-    auto worker = new OpenCanWorker(callback);
-
-    worker->path = path;
-    worker->baudRate = getIntFromObject(options, "baudRate");
+    auto worker = new OpenCanWorker(info[2].As<Napi::Function>());
+    worker->path = info[0].ToNumber().Int32Value();
+    worker->baudRate = getIntFromObject(info[1].ToObject(), "baudRate");
 
     worker->Queue();
 
     return env.Undefined(); // Return the instance in case no callback is passed
 }
 
-// TODO Implement
 Napi::Value CloseCan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
+    if (!info[0].IsNumber()) {
+        Napi::TypeError::New(env, "First argument must be a number").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    if (!info[1].IsFunction()) {
+        Napi::TypeError::New(env, "Second argument must be a function").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    auto worker = new CloseCanWorker(info[1].As<Napi::Function>());
+    worker->handle = info[0].ToNumber().Int32Value();
+    worker->Queue();
+
     return env.Undefined(); // Return the instance in case no callback is passed
 }
 
-// TODO Implement
-Napi::Value ReadCan(const Napi::CallbackInfo &info) {
-    Napi::Env env = info.Env();
-
-    return env.Undefined(); // Return the instance in case no callback is passed
-}
-
-// TODO Implement
 Napi::Value SetCallBackCan(const Napi::CallbackInfo &info) {
     Napi::Env env = info.Env();
 
-    return env.Undefined(); // Return the instance in case no callback is passed
+
+    if (!info[0].IsNumber()) {
+        Napi::TypeError::New(env, "First argument must be a number").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    if (!info[0].IsFunction()) {
+        Napi::TypeError::New(env, "Expected a function as the first argument").ThrowAsJavaScriptException();
+        return env.Null();
+    }
+
+    auto jsCallback = info[0].As<Napi::Function>();
+
+    tsfn = Napi::ThreadSafeFunction::New(env, jsCallback, "CAN Listener", 0, 1);
+    std::thread listenerThread(startCanListener, info[0].ToNumber().Int32Value());
+    listenerThread.detach();
+
+    return Napi::Boolean::New(env, true);
 }
 
 Napi::Value WriteCan(const Napi::CallbackInfo &info) {
@@ -143,7 +165,6 @@ Napi::Object Init(Napi::Env env, Napi::Object exports) {
     exports.Set("list", Napi::Function::New(env, ListCan));
     exports.Set("open", Napi::Function::New(env, OpenCan));
     exports.Set("close", Napi::Function::New(env, CloseCan));
-    exports.Set("read", Napi::Function::New(env, ReadCan));
     exports.Set("setMessageCallback", Napi::Function::New(env, SetCallBackCan));
     exports.Set("write", Napi::Function::New(env, WriteCan));
     return exports;

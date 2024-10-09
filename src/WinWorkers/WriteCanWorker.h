@@ -10,7 +10,6 @@
 #include "Canlib/INC/canlib.h"
 #include "Interfaces.h"
 #include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
 
 
 void sendCanFrame(canHandle hnd, long id, unsigned char *data, int dataLength) {

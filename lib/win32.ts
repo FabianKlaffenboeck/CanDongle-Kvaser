@@ -3,7 +3,6 @@ import {
     asyncClose,
     asyncListCanDevices,
     asyncOpenCanChannel,
-    asyncRead,
     asyncSetMessageCallback,
     asyncWrite
 } from "./load-bindings";
@@ -28,13 +27,8 @@ export const WindowsCanKvaser: WindowsCanKvaserInterface = {
             throw new TypeError('"baudRate" is not a valid baudRate')
         }
 
-        try {
-            const handle = await asyncOpenCanChannel(options.path, options);
-            return new WindowsCanDeviceKvaser(handle, options);
-        } catch (error) {
-            console.error('Error while opening CAN channel:', error);
-            throw error;
-        }
+        const handle = await asyncOpenCanChannel(options.path, options);
+        return new WindowsCanDeviceKvaser(handle, options);
     }
 }
 
@@ -56,28 +50,21 @@ export class WindowsCanDeviceKvaser implements CanInterface {
     }
 
     async close(): Promise<void> {
-    }
-
-    // TODO Implement
-    async read(): Promise<CanMessage> {
         if (!this.isOpen) {
             throw new Error("CAN channel is closed");
         }
-
-        try {
-            const message = await asyncRead(this.handle);
-            return {
-                id: message.id,
-                dlc: message.dlc,
-                data: Array.from(message.data), // Convert to regular array for JavaScript compatibility
-            };
-        } catch (error) {
-            throw new Error(`Failed to read from CAN channel: ${error.message}`);
-        }
+        await asyncClose(this.handle);
     }
 
-    // TODO Implement
+    // @ts-ignore
+    async read(): Promise<CanMessage> {
+    }
+
     setMessageCallback(callback: (id: number, data: number[], length: number) => void): void {
+        if (!this.isOpen) {
+            throw new Error("CAN channel is closed");
+        }
+        asyncSetMessageCallback(this.handle, callback)
     }
 
     async write(buffer: CanMessage[]): Promise<void> {
@@ -85,11 +72,7 @@ export class WindowsCanDeviceKvaser implements CanInterface {
             throw new Error("CAN channel is closed");
         }
 
-        try {
-            await asyncWrite(this.handle, buffer);
-        } catch (error) {
-            throw new Error(`Failed to write to CAN channel: ${error.message}`);
-        }
+        await asyncWrite(this.handle, buffer);
     }
 }
 

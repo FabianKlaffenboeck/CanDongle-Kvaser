@@ -8,11 +8,10 @@
 #include <cstdio>
 #include <sstream>
 #include <vector>
-#include "CheckForError.h"
+#include "../CheckForError.h"
 #include "Interfaces.h"
 #include "Canlib/INC/canlib.h"
 #include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
 
 std::vector<AdapterInfo> ListChannels() {
     std::vector<AdapterInfo> adapters;

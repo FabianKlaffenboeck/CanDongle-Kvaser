@@ -9,10 +9,9 @@
 #include <string>
 #include "Canlib/INC/canlib.h"
 #include <napi.h>
-// #include "../node_modules/node-addon-api/napi.h"
 
 canHandle openCanChannel(const int channel, const int bitrate) {
-    const canHandle hnd = canOpenChannel(channel, canOPEN_ACCEPT_VIRTUAL);
+    const canHandle hnd = canOpenChannel(channel, canOPEN_EXCLUSIVE |canOPEN_ACCEPT_VIRTUAL);
     if (hnd < 0) {
         std::cerr << "Error: Failed to open CAN channel!" << std::endl;
         return hnd;
