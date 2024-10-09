@@ -11,7 +11,7 @@
 #include <thread>
 
 #include <napi.h>
-#include "../node_modules/node-addon-api/napi.h"
+// #include "../node_modules/node-addon-api/napi.h"
 #include "WinWorkers/ListenCan.h"
 
 
