@@ -14,7 +14,8 @@
     "test:arduino": "TEST_PORT=$(./bin/find-arduino.ts) npm test",
     "test:watch": "mocha -w",
     "semantic-release": "semantic-release",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "version:update": "node ./scripts/update-version.js"
   },
   "keywords": [
     "CAN BUS",
