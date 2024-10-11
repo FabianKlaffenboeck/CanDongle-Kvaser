@@ -1,11 +1,11 @@
-import {AdapterInfo, CanDevicesInterface, CanInterface, CanMessage, OpenOptions} from "@fklab/candongle-interface";
+import {AdapterInfo, CanDevicesInterface, CanInterface, CanMessage, OpenOptions} from '@fklab/candongle-interface';
 import {
     asyncClose,
     asyncListCanDevices,
     asyncOpenCanChannel,
     asyncSetMessageCallback,
     asyncWrite
-} from "./load-bindings";
+} from './load-bindings';
 
 
 export type WindowsCanKvaserInterface = CanDevicesInterface<WindowsCanDeviceKvaser, OpenOptions>
@@ -51,25 +51,26 @@ export class WindowsCanDeviceKvaser implements CanInterface {
 
     async close(): Promise<void> {
         if (!this.isOpen) {
-            throw new Error("CAN channel is closed");
+            throw new Error('CAN channel is closed');
         }
         await asyncClose(this.handle);
     }
 
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     async read(): Promise<CanMessage> {
     }
 
     setMessageCallback(callback: (id: number, data: number[], length: number) => void): void {
         if (!this.isOpen) {
-            throw new Error("CAN channel is closed");
+            throw new Error('CAN channel is closed');
         }
         asyncSetMessageCallback(this.handle, callback)
     }
 
     async write(buffer: CanMessage[]): Promise<void> {
         if (!this.isOpen) {
-            throw new Error("CAN channel is closed");
+            throw new Error('CAN channel is closed');
         }
 
         await asyncWrite(this.handle, buffer);

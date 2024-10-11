@@ -3,6 +3,7 @@ import {promisify} from 'util'
 import {join} from 'path'
 
 // Load the native binding using node-gyp-build
+// eslint-disable-next-line
 const binding = nodeGypBuild(join(__dirname, '../')) as any;
 
 // Promisify the native methods or provide a fallback that throws an error
