@@ -1,4 +1,5 @@
 stages:
+  - test
   - build
   - publish
 
@@ -87,6 +88,16 @@ stages:
 #      node: x64
 #      command: prebuildify
 #      args: --arch x64+arm64
+
+lint:
+  stage: test
+  image: node:22.8.0
+  before_script:
+    - echo "@fklab:registry=https://${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/" > .npmrc
+    - echo "//${CI_SERVER_HOST}/api/v4/projects/${CI_PROJECT_ID}/packages/npm/:_authToken=${CI_JOB_TOKEN}" >> .npmrc
+    - npm install
+  script:
+    - npm run lint
 
 publish-to-gitlab-registry:
   stage: publish
